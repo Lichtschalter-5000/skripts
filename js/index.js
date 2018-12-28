@@ -1,7 +1,6 @@
 var index = 0;
-let newrow = '<tr><td id="{INDEX}a">{SPEAKER}</td><td id="{INDEX}b" class="text">{TEXT}</td></tr>\n';
+let newrow = '<tr id={INDEX}><td>{SPEAKER}</td><td class="text">{TEXT}</td></tr>\n';
 
-let speaker 
 
 $(document).ready( function (){
 
@@ -10,37 +9,29 @@ $(document).ready( function (){
 });
 
 
-function setup(){
-    let table = $("#table");  
+function setup(){  
     //ToDo load document
-    table.html( getNewRow());
+    insertRow(index);
 
-    attachHandlers(index);
-
-    index++;
 }
 
 function getNewRow(){
     var row = newrow;
-    row = row.replace("{INDEX}",index).replace("{INDEX}",index);
+    row = row.replace("{INDEX}",index);
 
-    var speaker = '<input type ="text" id="'+index+'sp">';
+    var speaker = '<input type ="text">';
 
 
     row = row.replace("{SPEAKER}",speaker);
 
-    var text = '<input type ="text"  id="'+index+'tx">';
+    var text = '<input type ="text">';
     row = row.replace("{TEXT}",text);
 
     return row;
 }
 
 
-function attachHandlers(ind) {
-    //var speakerbox = $("#"+ind+"sp");
-    //var txt = $("#"+ind+"tx");
-    //var speakercell = $("#"+ind+"a");
-
+function attachHandlers() {
 
     $("td input").keydown(function(event){
         
@@ -50,7 +41,7 @@ function attachHandlers(ind) {
                 event.preventDefault();
 
                 if($(this).parent().is("td:last")){
-                    //new row
+                    insertRow(index);
                 }
 
                 next = $(this).parent().next("td").find("input");//textbox->td->sibling td->child textbox
@@ -71,6 +62,20 @@ function attachHandlers(ind) {
         }
     });
 
+}
+
+
+function insertRow(atIndex){
+    if(atIndex === index ){
+        //append:
+        $("#table").append(getNewRow());
+        $("#table").find("tr:last").find("td input:first").focus();
+        index++;
+    } else {
+        //ToDo insert somewhere
+        //console.log("atIndex!==index");
+    }
+    attachHandlers();
 }
 /*
 
