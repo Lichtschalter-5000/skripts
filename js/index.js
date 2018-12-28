@@ -62,6 +62,14 @@ function attachHandlers() {
         }
     });
 
+	$("td").on("click", function(){
+		$(this).html('<input type ="text" value="'+$(this).text()+'">');
+		$(this).children().select();
+		$(this).off("click");
+		attachHandlers();
+	});
+	
+	
 }
 
 
@@ -77,50 +85,6 @@ function insertRow(atIndex){
     }
     attachHandlers();
 }
-/*
-
-
-    speakerbox.keydown(function(event) {
-        //console.log(event.which);
-        switch(event.which){
-            case 13:
-            case 9:
-                event.preventDefault();
-                txt.focus();
-                speakercell.html(speakerbox.val());
-
-                speakercell.click(txtToInput);
-                break;
-
-        }
-    });
-
-    txt.keydown(function(event) {
-        switch(event.which){
-            case 13:
-            case 9:
-                event.preventDefault();
-                if(event.shiftKey) {
-                    
-                } else {
-                    //new row
-                }
-                break;
-        }
-    });*/
-    
-
-
-/*
-var txtToInput = function() {
-                    $(this).html('<input  id="'+ind+'sp" value="'+speakercell.text()+'">');                  
-                    $("#"+ind+"sp").select();
-                    
-                    $(this).off("click");
-                    attachHandlers(ind);
-                    //console.log(index);
-                }
-*/
 
 
 
