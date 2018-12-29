@@ -129,6 +129,11 @@ function attachHandlers() {
             attachHandlers();
         });
 		
+		if($(this).parent("td").parent("tr").is("tr:last") && $(this).parent("td").is(":last-child")) {// input->td->tr is last tr && input->td-> last child of tr (text) 
+			insertRow(index);
+			console.log("s");
+		}
+		
 		$(this).parent().html($(this).val());
 		attachHandlers();
 	});
