@@ -16,7 +16,6 @@ function setup(){
 	$("#0").find("input:first").addClass("caret");
 
 	
-	
 }
 
 function getNewRow(atIndex){
@@ -53,9 +52,6 @@ function attachHandlers() {
 					$(".caret").removeClass("caret");//tr
                     
 					insertRow(index);
-					//$(this).parent().addClass("hi");
-					//console.log($(this).parent());
-					//$("tr#"+index).find("td:first").find("input").addClass("caret");
                 }
 				
 				$(this).removeClass("caret");
@@ -65,22 +61,6 @@ function attachHandlers() {
                 next = $(this).parent().next("td").find("input");//textbox->td->sibling td->child textbox
                 next.focus();  
 				next.addClass("caret");
-               
-                /*$(this).parent().on("click", function(){
-					$(".caret").removeClass("caret");
-					
-                    $(this).html('<input class = "caret" type ="text" value="'+$(this).text()+'">');
-                    $(this).children().select();
-                    $(this).off("click");
-					
-					$(this).addClass("caret");
-					$(this).parent().addClass("caret");
-					
-					
-                    attachHandlers();
-                });*/
-                //$(this).parent().html($(this).val());
-
 
               
                 break;
@@ -118,7 +98,7 @@ function attachHandlers() {
 			$(".caret").removeClass("caret");
 			$(".caretBelow").removeClass("caretBelow");
 			
-            $(this).html('<input class = "caret" type ="text" value="'+$(this).text()+'">');
+            $(this).html('<input class = "caret" type ="text" value="'+parseHTMLToInput($(this).html())+'">');
             $(this).children().select();
             $(this).off("click");
 		
@@ -131,10 +111,9 @@ function attachHandlers() {
 		
 		if($(this).parent("td").parent("tr").is("tr:last") && $(this).parent("td").is(":last-child")) {// input->td->tr is last tr && input->td-> last child of tr (text) 
 			insertRow(index);
-			console.log("s");
 		}
 		
-		$(this).parent().html($(this).val());
+		$(this).parent().html(parseInput($(this).val()));
 		attachHandlers();
 	});
 	
@@ -200,8 +179,43 @@ function insertRow(atIndex){
     attachHandlers();
 }
 
+/**
+ * Partially taken from mustache.js
+ */
+function parseInput(text){
+	var map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+	'/': '&#x2F;',
+	'`': '&#x60;',
+	'=': '&#x3D;',
+	"(": '<i>(',
+	")": ')</i>',
+	"{": '<b>',
+	"}": '</b>',
+	"[": '<u>',
+	"]": '</u>'
+  };
 
 
+	return text.replace(/[&<>"'\/`=\(\){}[\]]/g, function(m) { return map[m]; });
+}
 
+function parseHTMLToInput(text){
+	var map = {
+    
+	"<i>(": '(',
+	")</i>": ')',
+	"<b>": '{',
+	"</b>": '}',
+	"<u>": '[',
+	"</u>": ']'
+  };
+	
+	return text.replace(/(<i>\()|(\)<\/i>)|(<b>)|(<\/b>)|(<u>)|(<\/u>)/g, function(m) { return map[m]; });
+}
 
 
