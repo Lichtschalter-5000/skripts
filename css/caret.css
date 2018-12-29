@@ -1,0 +1,13 @@
+tr.caret {
+	
+	background-color: rgba(220,100,100,0.25);
+	
+}
+
+
+
+input.caret, td.caret {
+	
+	background-color: rgba(220,50,50,0.75);
+}
+
