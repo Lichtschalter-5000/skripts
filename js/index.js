@@ -15,7 +15,6 @@ function setup(){
 	$("#0").addClass("caret");
 	$("#0").find("input:first").addClass("caret");
 
-	
 }
 
 function getNewRow(atIndex){
@@ -94,20 +93,7 @@ function attachHandlers() {
 	$("td input").off("blur");
 	
 	$("td input").blur( function() {
-		$(this).parent().on("click", function(){
-			$(".caret").removeClass("caret");
-			$(".caretBelow").removeClass("caretBelow");
-			
-            $(this).html('<input class = "caret" type ="text" value="'+parseHTMLToInput($(this).html())+'">');
-            $(this).children().select();
-            $(this).off("click");
 		
-			$(this).addClass("caret");
-			$(this).parent().addClass("caret");
-		
-		
-            attachHandlers();
-        });
 		
 		if($(this).parent("td").parent("tr").is("tr:last") && $(this).parent("td").is(":last-child")) {// input->td->tr is last tr && input->td-> last child of tr (text) 
 			insertRow(index);
@@ -117,10 +103,28 @@ function attachHandlers() {
 		attachHandlers();
 	});
 	
+	$("#table td:not(:has(>input))").off("click");
+	$("#table td:not(:has(>input))").on("click", function(){
+		$(".caret").removeClass("caret");
+		$(".caretBelow").removeClass("caretBelow");
+		
+		$(this).html('<input class = "caret" type ="text" value="'+parseHTMLToInput($(this).html())+'">');
+		$(this).children().select();
+		$(this).off("click");
+	
+		$(this).addClass("caret");
+		$(this).parent().addClass("caret");
+	
+	
+		attachHandlers();
+    });
+	
+	
 	$(document).off("keydown");
 	
 	$(document).on("keydown", function(event) {
 		switch(event.which){
+			
 			case 40://Arrow down
 				var oldtr = $(".caretBelow");
 				
@@ -137,6 +141,15 @@ function attachHandlers() {
 				oldtr.prev("tr").addClass("caretBelow");
 				}
 				break;
+			case 83://s - save
+				if(event.ctrlKey){
+					event.preventDefault();
+					
+					
+					exportJSON($("#table"),"text");
+					//window.print();
+					break;
+				}
 			default: //any other key
 				var car = $(".caretBelow"); 
 				if(car.length>0) {
@@ -215,7 +228,7 @@ function parseHTMLToInput(text){
 	"</u>": ']'
   };
 	
-	return text.replace(/(<i>\()|(\)<\/i>)|(<b>)|(<\/b>)|(<u>)|(<\/u>)/g, function(m) { return map[m]; });
+	return text.replace(/(<i>\()|(\)<\/i>)|(<b>)|(<\/b>)|(<u>)|(<\/u>)/gi, function(m) { return map[m]; });
 }
 
 
