@@ -4,6 +4,8 @@ let newrow = '<tr class = "caret" id={INDEX}><td>{SPEAKER}</td><td class="text">
 
 $(document).ready( function (){
 
+	setup("new");
+
 	$("button#newDoc").on("click", function(){
 		if(confirm("Really new file?")){
 		setup("new");
@@ -135,7 +137,7 @@ function attachHandlers() {
 		$(".caret").removeClass("caret");
 		$(".caretBelow").removeClass("caretBelow");
 		
-		console.log("html:  \n"+$(this).html());
+		//console.log("html:  \n"+$(this).html());
 		
 		var text = $(this).html();
 		
@@ -237,8 +239,10 @@ function parseInput(text){
 	'/': '&#x2F;',
 	'`': '&#x60;',
 	'=': '&#x3D;',
-	"(": '<i>(',
-	")": ')</i>',
+	"_(": '<i>(',
+	")_": ')</i>',
+	"*(": '<i>',
+	")*": '</i>',
 	"{": '<b>',
 	"}": '</b>',
 	"[": '<u>',
@@ -246,7 +250,7 @@ function parseInput(text){
   };
 
 
-	return text.replace(/[&<>\"\'\/\`=\(\){}[\]]/g, function(m) { return map[m]; });
+	return text.replace(/[&<>\"\'\/\`={}\[\]]|([_\*]\(|\)[_\*])/g, function(m) { return map[m]; });
 }
 
 function parseHTMLToInput(text){
@@ -260,16 +264,18 @@ function parseHTMLToInput(text){
 		//'&#x2F;':"/",
 		//'&#x60;':"`",
 		//'&#x3D;':"=",
-		"<i>(": '(',
-		")</i>": ')',
+		"<i>(": '_(',
+		")</i>": ')_',
+		"<i>": '*(',
+		"</i>": ')*',
 		"<b>": '{',
 		"</b>": '}',
 		"<u>": '[',
 		"</u>": ']'
 	};
  
-	//|&amp;|&gt;|&lt;|&quot;|&#039;|&#x2F;|&#x60;|$#x3D;
-	return text.replace(/(<i>\()|(\)<\/i>)|(<b>)|(<\/b>)|(<u>)|(<\/u>)|&gt;|&lt;/gi, function(m) { return map[m]; });
+	
+return text.replace(/(<i>\(?)|(\)?<\/i>)|(<\/?[ub]>)|(&[gl]t;)/gi, function(m) { return map[m]; });
 }
 
 

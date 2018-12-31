@@ -27,15 +27,17 @@ function exportJSON(html,name) {
 		rowArray.push(row);
 	});
 	
-	//https://stackoverflow.com/questions/33271555/download-json-object-as-json-file-using-jquery
-	$("<a />", {
-		"download": name+".json",
-		"href" : "data:application/json," + encodeURIComponent(JSON.stringify(rowArray))
-	}).appendTo("body")
-	.click(function() {
-		$(this).remove()
-	})[0].click();
-	
+	if(name){
+		name = name.replace(/[^a-z|1-9]/gi,"_");
+		//https://stackoverflow.com/questions/33271555/download-json-object-as-json-file-using-jquery
+		$("<a />", {
+			"download": name+".json",
+			"href" : "data:application/json," + encodeURIComponent(JSON.stringify(rowArray))
+		}).appendTo("body")
+		.click(function() {
+			$(this).remove()
+		})[0].click();
+	}
 	
 	
 	return JSON.stringify(rowArray);
