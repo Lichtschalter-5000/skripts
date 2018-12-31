@@ -78,20 +78,28 @@ function attachHandlers() {
 					break;
 				}
 			
-                if($(this).parent().is("td:last")){
-					$(".caret").removeClass("caret");//tr
-                    
-					insertRow(index);
-                }
-				
 				$(this).removeClass("caret");
-
-				//$(this).blur();
-
-                next = $(this).parent().next("td").find("input");//textbox->td->sibling td->child textbox
-                next.focus();  
-				next.addClass("caret");
-
+				
+				if($(this).closest("tr").is(":not(tr:last)")&&!$(this).parent().next("td").find("input").length) {//tr in between
+					$(this).closest("tr").addClass("caretBelow");
+					$(".caret").removeClass("caret");
+					$(this).blur();
+				} 
+				else if($(this).parent().is("td:last-child")){
+					$(".caret").removeClass("caret");//tr
+					
+					insertRow(parseInt($(this).closest("tr").attr("id")));
+				} 
+				else {
+					
+					next = $(this).parent().next("td").find("input");//textbox->td->sibling td->child textbox
+					if(next.length){
+						next.focus();  
+						next.addClass("caret");
+					} else {
+						$(this).blur();
+					}
+				}
               
                 break;
 			
@@ -126,9 +134,9 @@ function attachHandlers() {
 	$("td input").blur( function() {
 		
 		
-		if($(this).parent("td").parent("tr").is("tr:last") && $(this).parent("td").is(":last-child")) {// input->td->tr is last tr && input->td-> last child of tr (text) 
+		/*if($(this).parent("td").parent("tr").is("tr:last") && $(this).parent("td").is(":last-child")) {// input->td->tr is last tr && input->td-> last child of tr (text) 
 			insertRow(index);
-		}
+		}*/
 		
 		$(this).parent().html(parseInput($(this).val()));
 		attachHandlers();
@@ -162,6 +170,8 @@ function attachHandlers() {
 	$(document).off("keydown");
 	
 	$(document).on("keydown", function(event) {
+		
+			
 		switch(event.which){
 			
 			case 40://Arrow down
@@ -189,17 +199,30 @@ function attachHandlers() {
 					//window.print();
 					break;
 				}
-			default: //any other key
+				
+			case 45://insert (einfügen)
+			
+				if(event.ctrlKey||$("input:focus").length){
+					break;
+				}
+			
+				
+			
 				var car = $(".caretBelow"); 
 				if(car.length>0) {
 					insertRow(parseInt(car.attr("id")));
 				}
 				car.removeClass("caretBelow");
+				
+				
+				break;
+			default: //any other key
 				break;
 		}
 		
 		
 	});
+	
 	
 	
 }
@@ -211,23 +234,24 @@ function insertRow(atIndex){
         $("#table").append(getNewRow(index));
         $("#table").find("tr:last").find("td input:first").focus();
 		$("#table").find("tr:last").find("td input:first").addClass("caret");
-        index++;
+        
     } else {
         //insert somewhere else:
-		tr = $("tr.caretBelow#"+atIndex);
+		tr = $("tr#"+atIndex);
 		
 		tr.nextAll("tr").each(function() {
 			$(this).attr("id",parseInt($(this).attr("id"))+1);
 		});
 		
 		tr.after(getNewRow(atIndex+1));
-		index++;
+		
 		
 		$("tr.caret td input:first").focus();
 		$("tr.caret td input:first").addClass("caret");
 		
 		
     }
+	index++;
     attachHandlers();
 }
 
