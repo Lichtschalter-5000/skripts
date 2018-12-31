@@ -4,17 +4,41 @@ let newrow = '<tr class = "caret" id={INDEX}><td>{SPEAKER}</td><td class="text">
 
 $(document).ready( function (){
 
-    setup();
+	$("button#newDoc").on("click", function(){
+		if(confirm("Really new file?")){
+		setup("new");
+		} 
+	});
+
+	$("button#loadfileButton").on("click", function(){
+		if(!document.getElementById("loadfile").files.length||!confirm("Really load file?")) {
+			return;
+		}
+		setup("load");
+	});
 
 });
 
 
-function setup(){  
-    //ToDo load document
-    insertRow(index);
-	$("#0").addClass("caret");
-	$("#0").find("input:first").addClass("caret");
-
+function setup(action){ 
+	$("#table").html("");
+	switch(action){
+		case "new":
+			insertRow(index);
+			$("#0").addClass("caret");
+			$("#0").find("input:first").addClass("caret");
+			break;
+		
+		case "load":
+			//https://stackoverflow.com/questions/36127648/uploading-a-json-file-and-using-it
+			var fr = new FileReader();
+			fr.onload = function(e) {
+				//console.log(e);
+				importJSON(e.target.result);
+			}
+			fr.readAsText(document.getElementById("loadfile").files.item(0));
+			break;
+	}
 }
 
 function getNewRow(atIndex){
@@ -103,12 +127,20 @@ function attachHandlers() {
 		attachHandlers();
 	});
 	
+	
+	//td without input
 	$("#table td:not(:has(>input))").off("click");
+	
 	$("#table td:not(:has(>input))").on("click", function(){
 		$(".caret").removeClass("caret");
 		$(".caretBelow").removeClass("caretBelow");
 		
-		$(this).html('<input class = "caret" type ="text" value="'+parseHTMLToInput($(this).html())+'">');
+		console.log("html:  \n"+$(this).html());
+		
+		var text = $(this).html();
+		
+		$(this).html('<input class = "caret" type ="text">');
+		$(this).find("input").val(parseHTMLToInput(text));
 		$(this).children().select();
 		$(this).off("click");
 	
@@ -128,7 +160,7 @@ function attachHandlers() {
 			case 40://Arrow down
 				var oldtr = $(".caretBelow");
 				
-				if(oldtr.next("tr").length>0){
+				if(oldtr.next("tr").length){
 				oldtr.removeClass("caretBelow");
 				oldtr.next("tr").addClass("caretBelow");
 				}
@@ -136,7 +168,7 @@ function attachHandlers() {
 			case 38://Arrow up
 				var oldtr = $(".caretBelow");
 				
-				if(oldtr.prev("tr").length>0){
+				if(oldtr.prev("tr").length){
 				oldtr.removeClass("caretBelow");
 				oldtr.prev("tr").addClass("caretBelow");
 				}
@@ -214,21 +246,30 @@ function parseInput(text){
   };
 
 
-	return text.replace(/[&<>"'\/`=\(\){}[\]]/g, function(m) { return map[m]; });
+	return text.replace(/[&<>\"\'\/\`=\(\){}[\]]/g, function(m) { return map[m]; });
 }
 
 function parseHTMLToInput(text){
+	//console.log("text:"+text);
 	var map = {
-    
-	"<i>(": '(',
-	")</i>": ')',
-	"<b>": '{',
-	"</b>": '}',
-	"<u>": '[',
-	"</u>": ']'
-  };
-	
-	return text.replace(/(<i>\()|(\)<\/i>)|(<b>)|(<\/b>)|(<u>)|(<\/u>)/gi, function(m) { return map[m]; });
+		//'&amp;':"&",
+		'&lt;':"<",
+		'&gt;':">",
+		//'&quot;':"\"",
+		//'&#039;':"'",
+		//'&#x2F;':"/",
+		//'&#x60;':"`",
+		//'&#x3D;':"=",
+		"<i>(": '(',
+		")</i>": ')',
+		"<b>": '{',
+		"</b>": '}',
+		"<u>": '[',
+		"</u>": ']'
+	};
+ 
+	//|&amp;|&gt;|&lt;|&quot;|&#039;|&#x2F;|&#x60;|$#x3D;
+	return text.replace(/(<i>\()|(\)<\/i>)|(<b>)|(<\/b>)|(<u>)|(<\/u>)|&gt;|&lt;/gi, function(m) { return map[m]; });
 }
 
 

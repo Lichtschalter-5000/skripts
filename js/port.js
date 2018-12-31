@@ -18,7 +18,7 @@ function exportJSON(html,name) {
 		row = new Object();
 		row.speaker = $(this).find("td:first input").length?$(this).find("td:first input").val() : parseHTMLToInput($(this).find("td:first").html()); 
 		
-		row.text = $(this).find("td.text input").length?$(this).find("td.text input").val() : parseHTMLToInput($(this).find("td:first").html()); 
+		row.text = $(this).find("td.text input").length?$(this).find("td.text input").val() : parseHTMLToInput($(this).find("td.text").html()); 
 		row.id = $(this).attr("id");
 		
 		row.hasCaret = $(this).is(".caret");
@@ -42,14 +42,16 @@ function exportJSON(html,name) {
 }
 
 function importJSON(json){
-	console.log(json);
+	//console.log(json);
 	rowArray = JSON.parse(json);
-	console.log(rowArray);
+	//console.log("array"+rowArray);
 	t = $("#table");
-	t.html("");
+	
 	
 	for(row of rowArray){
-		r = t.append("<tr></tr>");
+		t.append("<tr></tr>");
+		
+		r=$("tr:last");
 		
 		r.append("<td>"+parseInput(row.speaker)+"</td><td class=\"text\">"+parseInput(row.text)+"</td>");
 		
