@@ -256,7 +256,7 @@ function parseInput(text){
 function parseHTMLToInput(text){
 	//console.log("text:"+text);
 	var map = {
-		//'&amp;':"&",
+		'&amp;':"&",
 		'&lt;':"<",
 		'&gt;':">",
 		//'&quot;':"\"",
@@ -275,7 +275,7 @@ function parseHTMLToInput(text){
 	};
  
 	
-return text.replace(/(<i>\(?)|(\)?<\/i>)|(<\/?[ub]>)|(&[gl]t;)/gi, function(m) { return map[m]; });
+return text.replace(/(<i>\(?)|(\)?<\/i>)|(<\/?[ub]>)|(&([gl]t|amp;))/gi, function(m) { return map[m]; });
 }
 
 
