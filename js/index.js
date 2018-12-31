@@ -67,12 +67,17 @@ function attachHandlers() {
         switch(event.which){
             case 13://ENTER
 				
-				if(event.shiftKey) {
+				if(event.shiftKey||$(this).val()==="") {
 					break;
 				} 
             case 9://TAB
                 event.preventDefault();
 
+				
+				if($(this).val()===""){
+					break;
+				}
+			
                 if($(this).parent().is("td:last")){
 					$(".caret").removeClass("caret");//tr
                     
