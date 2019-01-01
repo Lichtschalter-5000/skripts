@@ -47,11 +47,13 @@ function getNewRow(atIndex){
     var row = newrow;
     row = row.replace("{INDEX}",atIndex);
 
-	var speaker = '<textarea placeholder=""></textarea>';
+
+	var speaker = '<textarea placeholder=" "></textarea>';
 
     row = row.replace("{SPEAKER}",speaker);
 
-    var text = '<textarea placeholder=""></textarea>';
+    var text = '<textarea placeholder=" "></textarea>';
+
     row = row.replace("{TEXT}",text);
 
     return row;
@@ -168,8 +170,9 @@ function attachHandlers() {
 		
 		var text = $(this).html();
 		
-		$(this).html('<textarea class = "caret" type ="text"></textarea>');
+		$(this).html('<textarea class = "caret" type ="text" placeholder = " "></textarea>');
 		$(this).find("textarea").val(parseHTMLToInput(text));
+
 		$(this).children().select();
 		$(this).off("click");
 	
