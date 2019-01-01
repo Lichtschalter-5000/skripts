@@ -47,12 +47,12 @@ function getNewRow(atIndex){
     var row = newrow;
     row = row.replace("{INDEX}",atIndex);
 
-    var speaker = '<input type ="text">';
+    var speaker = '<input type ="text" placeholder="">';
 
 
     row = row.replace("{SPEAKER}",speaker);
 
-    var text = '<input type ="text">';
+    var text = '<input type ="text" placeholder="">';
     row = row.replace("{TEXT}",text);
 
     return row;

@@ -1,3 +1,4 @@
+
 tr.caret {
 	
 	background-color: rgba(220,100,100,0.25);
@@ -16,4 +17,8 @@ tr.caretBelow td{
 	border-bottom: 3px dashed aqua; 
 	
 	
+}
+
+tr:not(.caret) input:placeholder-shown {
+	background-color: #f3f3f3;
 }
