@@ -170,7 +170,7 @@ function attachHandlers() {
 		
 		var text = $(this).html();
 		
-		$(this).html('<input class = "caret" type ="text">');
+		$(this).html('<input class = "caret" type ="text" placeholder="">');
 		$(this).find("input").val(parseHTMLToInput(text));
 		$(this).children().select();
 		$(this).off("click");
