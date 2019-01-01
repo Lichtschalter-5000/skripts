@@ -148,6 +148,16 @@ function attachHandlers() {
 		}
 	});
 	
+	$("td input").off("focus");
+	
+	$("td input").focus( function() {
+		$(".caret").removeClass("caret");
+		$(".caretBelow").removeClass("caretBelow");
+		
+		$(this).addClass("caret");
+		$(this).closest("tr").addClass("caret");
+	});
+	
 	
 	//td without input
 	$("#table td:not(:has(>input))").off("click");
