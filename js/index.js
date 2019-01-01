@@ -47,12 +47,12 @@ function getNewRow(atIndex){
     var row = newrow;
     row = row.replace("{INDEX}",atIndex);
 
-    var speaker = '<input type ="text" placeholder="">';
+    var speaker = '<input type ="text" placeholder=" ">';
 
 
     row = row.replace("{SPEAKER}",speaker);
 
-    var text = '<input type ="text" placeholder="">';
+    var text = '<input type ="text" placeholder=" ">';
     row = row.replace("{TEXT}",text);
 
     return row;
@@ -170,7 +170,7 @@ function attachHandlers() {
 		
 		var text = $(this).html();
 		
-		$(this).html('<input class = "caret" type ="text" placeholder="">');
+		$(this).html('<input class = "caret" type ="text" placeholder=" ">');
 		$(this).find("input").val(parseHTMLToInput(text));
 		$(this).children().select();
 		$(this).off("click");
