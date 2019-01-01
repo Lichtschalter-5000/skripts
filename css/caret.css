@@ -1,5 +1,5 @@
 
-tr.caret, tr.caret textarea{
+tr.caret, tr.caret .uin{
 	
 	background-color: rgba(220,100,100,0.25);
 	
@@ -7,7 +7,7 @@ tr.caret, tr.caret textarea{
 
 
 
-tr textarea.caret, td.caret {
+tr .uin.caret, td.caret {
 	
 	background-color: rgba(220,50,50,0.75);
 }
@@ -19,7 +19,7 @@ tr.caretBelow td{
 	
 }
 
-tr:not(.caret) textarea:placeholder-shown {
+tr:not(.caret) .uin:placeholder-shown {
 	background-color: #f3f3f3;
 	border-style: none;
 }

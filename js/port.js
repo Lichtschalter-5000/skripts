@@ -16,9 +16,9 @@ function exportJSON(html,name) {
 	
 	html.find("tr").each(function(){
 		row = new Object();
-		row.speaker = $(this).find("td:first textarea").length?$(this).find("td:first textarea").html() : parseHTMLToInput($(this).find("td:first").html()); 
+		row.speaker = $(this).find("td:first .uin").length?$(this).find("td:first .uin").html() : parseHTMLToInput($(this).find("td:first").html()); 
 		
-		row.text = $(this).find("td.text textarea").length?$(this).find("td.text textarea").html() : parseHTMLToInput($(this).find("td.text").html()); 
+		row.text = $(this).find("td.text .uin").length?$(this).find("td.text .uin").html() : parseHTMLToInput($(this).find("td.text").html()); 
 		row.id = $(this).attr("id");
 		
 		row.hasCaret = $(this).is(".caret");
