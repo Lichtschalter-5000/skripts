@@ -81,9 +81,14 @@ function attachHandlers() {
 				$(this).removeClass("caret");
 				
 				if($(this).closest("tr").is(":not(tr:last)")&&!$(this).parent().next("td").find("input").length) {//tr in between
-					$(this).closest("tr").addClass("caretBelow");
-					$(".caret").removeClass("caret");
-					$(this).blur();
+					if($(this).parent().is("td:last-child")) {
+						$(this).closest("tr").addClass("caretBelow");
+						$(".caret").removeClass("caret");
+						$(this).blur();
+					} else {
+						$(this).parent("td").next("td").click();
+						//$(this).blur();
+					}
 				} 
 				else if($(this).parent().is("td:last-child")){
 					$(".caret").removeClass("caret");//tr
@@ -197,10 +202,22 @@ function attachHandlers() {
 					
 					exportJSON($("#table"),"text");
 					//window.print();
+				}
+				break;
+				
+			case 13://ENTER (+Ctrl)
+				if(!event.ctrlKey||$("input:focus").length){
 					break;
 				}
 				
-			case 45://insert (einfügen)
+				var car = $(".caretBelow"); 
+				car.find("td:first").click();
+				car.removeClass("caretBelow");
+				
+			
+				break;
+			
+			case 45://insert (einfügen) (!Ctrl)
 			
 				if(event.ctrlKey||$("input:focus").length){
 					break;
