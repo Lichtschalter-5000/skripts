@@ -1,5 +1,5 @@
 
-tr.caret {
+tr.caret, tr.caret input{
 	
 	background-color: rgba(220,100,100,0.25);
 	
@@ -7,7 +7,7 @@ tr.caret {
 
 
 
-input.caret, td.caret {
+tr input.caret, td.caret {
 	
 	background-color: rgba(220,50,50,0.75);
 }
@@ -21,4 +21,5 @@ tr.caretBelow td{
 
 tr:not(.caret) input:placeholder-shown {
 	background-color: #f3f3f3;
+	border-style: none;
 }
