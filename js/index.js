@@ -28,7 +28,7 @@ function setup(action){
 		case "new":
 			insertRow(index);
 			$("#0").addClass("caret");
-			$("#0").find("input:first").addClass("caret");
+			$("#0").find("textarea:first").addClass("caret");
 			break;
 		
 		case "load":
@@ -47,12 +47,11 @@ function getNewRow(atIndex){
     var row = newrow;
     row = row.replace("{INDEX}",atIndex);
 
-    var speaker = '<input type ="text" placeholder="">';
-
+	var speaker = '<textarea placeholder=""></textarea>';
 
     row = row.replace("{SPEAKER}",speaker);
 
-    var text = '<input type ="text" placeholder="">';
+    var text = '<textarea placeholder=""></textarea>';
     row = row.replace("{TEXT}",text);
 
     return row;
@@ -61,9 +60,9 @@ function getNewRow(atIndex){
 
 function attachHandlers() {
 
-	$("td input").off("keydown");
+	$("td textarea").off("keydown");
 
-    $("td input").keydown(function(event){  
+    $("td textarea").keydown(function(event){  
         switch(event.which){
             case 13://ENTER
 				
@@ -80,7 +79,7 @@ function attachHandlers() {
 			
 				$(this).removeClass("caret");
 				
-				if($(this).closest("tr").is(":not(tr:last)")&&!$(this).parent().next("td").find("input").length) {//tr in between
+				if($(this).closest("tr").is(":not(tr:last)")&&!$(this).parent().next("td").find("textarea").length) {//tr in between
 					if($(this).parent().is("td:last-child")) {
 						$(this).closest("tr").addClass("caretBelow");
 						$(".caret").removeClass("caret");
@@ -97,7 +96,7 @@ function attachHandlers() {
 				} 
 				else {
 					
-					next = $(this).parent().next("td").find("input");//textbox->td->sibling td->child textbox
+					next = $(this).parent().next("td").find("textarea");//textbox->td->sibling td->child textbox
 					if(next.length){
 						next.focus();  
 						next.addClass("caret");
@@ -134,10 +133,9 @@ function attachHandlers() {
         }
     });
 
-	$("td input").off("blur");
+	$("td textarea").off("blur");
 	
-	$("td input").blur( function() {
-		
+	$("td textarea").blur( function() {
 		
 		/*if($(this).parent("td").parent("tr").is("tr:last") && $(this).parent("td").is(":last-child")) {// input->td->tr is last tr && input->td-> last child of tr (text) 
 			insertRow(index);
@@ -148,9 +146,9 @@ function attachHandlers() {
 		}
 	});
 	
-	$("td input").off("focus");
+	$("td textarea").off("focus");
 	
-	$("td input").focus( function() {
+	$("td textarea").focus( function() {
 		$(".caret").removeClass("caret");
 		$(".caretBelow").removeClass("caretBelow");
 		
@@ -159,10 +157,10 @@ function attachHandlers() {
 	});
 	
 	
-	//td without input
-	$("#table td:not(:has(>input))").off("click");
+	//td without textarea
+	$("#table td:not(:has(>textarea))").off("click");
 	
-	$("#table td:not(:has(>input))").on("click", function(){
+	$("#table td:not(:has(>textarea))").on("click", function(){
 		$(".caret").removeClass("caret");
 		$(".caretBelow").removeClass("caretBelow");
 		
@@ -170,8 +168,8 @@ function attachHandlers() {
 		
 		var text = $(this).html();
 		
-		$(this).html('<input class = "caret" type ="text">');
-		$(this).find("input").val(parseHTMLToInput(text));
+		$(this).html('<textarea class = "caret" type ="text"></textarea>');
+		$(this).find("textarea").val(parseHTMLToInput(text));
 		$(this).children().select();
 		$(this).off("click");
 	
@@ -217,7 +215,7 @@ function attachHandlers() {
 				break;
 				
 			case 13://ENTER (+Ctrl)
-				if(!event.ctrlKey||$("input:focus").length){
+				if(!event.ctrlKey||$("textarea:focus").length){
 					break;
 				}
 				
@@ -230,7 +228,7 @@ function attachHandlers() {
 			
 			case 45://insert (einfügen) (!Ctrl)
 			
-				if(event.ctrlKey||$("input:focus").length){
+				if(event.ctrlKey||$("textarea:focus").length){
 					break;
 				}
 			
@@ -260,8 +258,8 @@ function insertRow(atIndex){
     if(atIndex === index ){
         //append:
         $("#table").append(getNewRow(index));
-        $("#table").find("tr:last").find("td input:first").focus();
-		$("#table").find("tr:last").find("td input:first").addClass("caret");
+        $("#table").find("tr:last").find("td textarea:first").focus();
+		$("#table").find("tr:last").find("td textarea:first").addClass("caret");
         
     } else {
         //insert somewhere else:
@@ -274,8 +272,8 @@ function insertRow(atIndex){
 		tr.after(getNewRow(atIndex+1));
 		
 		
-		$("tr.caret td input:first").focus();
-		$("tr.caret td input:first").addClass("caret");
+		$("tr.caret td textarea:first").focus();
+		$("tr.caret td textarea:first").addClass("caret");
 		
 		
     }
@@ -296,6 +294,7 @@ function parseInput(text){
 	'/': '&#x2F;',
 	'`': '&#x60;',
 	'=': '&#x3D;',
+	"\n": '<br>',
 	"_(": '<i>(',
 	")_": ')</i>',
 	"*(": '<i>',
@@ -307,7 +306,7 @@ function parseInput(text){
   };
 
 
-	return text.replace(/[&<>\"\'\/\`={}\[\]]|([_\*]\(|\)[_\*])/g, function(m) { return map[m]; });
+	return text.replace(/[&<>\"\'\/\`={}\[\]\n]|([_\*]\(|\)[_\*])/g, function(m) { return map[m]; });
 }
 
 function parseHTMLToInput(text){
@@ -321,6 +320,7 @@ function parseHTMLToInput(text){
 		//'&#x2F;':"/",
 		//'&#x60;':"`",
 		//'&#x3D;':"=",
+		"<br>": '\n',
 		"<i>(": '_(',
 		")</i>": ')_',
 		"<i>": '*(',
@@ -332,7 +332,7 @@ function parseHTMLToInput(text){
 	};
  
 	
-return text.replace(/(<i>\(?)|(\)?<\/i>)|(<\/?[ub]>)|(&([gl]t|amp;))/gi, function(m) { return map[m]; });
+return text.replace(/(<i>\(?)|(\)?<\/i>)|(<\/?(?:[ub]|br)>)|(&((?:[gl]t|amp);))/gi, function(m) { return map[m]; });
 }
 
 
