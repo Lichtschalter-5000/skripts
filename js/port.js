@@ -26,6 +26,7 @@ function exportPDF(json, name) {
 			if(ty>285){
 				ty = 20;
 				conv.addPage();
+				conv.text(speaker+"( f.)",20,ty);
 			}
 		}
 		
