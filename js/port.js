@@ -1,16 +1,49 @@
-function exportPDF(html, name) {
+function exportPDF(json, name) {
+	name = name.replace(/[^a-z|1-9]/gi,"_");
 	
-	converter = new jsPDF();
+	var conv = new jsPDF();
+	var rowArray = JSON.parse(json);
 	
-	converter.fromHTML(html,10,10);
-	//converter.save(name+'.pdf');
+	conv.setFontSize(16);
+	conv.setFontStyle("bold");
 	
-	converter.autoPrint();
-	converter.output("dataurlnewwindow");
+	conv.text(name,20,20);
+	
+	conv.setFontSize(12);
+	conv.setFontStyle("normal");
+	
+	var ty = 30;
+	for(row of rowArray){
+		
+		let speaker = parseInput(row.speaker);
+		let text = conv.splitTextToSize(parseInput(row.text),150);
+		
+		conv.text(speaker,20,ty);
+		for(t of text){
+			
+			conv.text(t,50,ty);
+			ty+=5;
+			if(ty>285){
+				ty = 20;
+				conv.addPage();
+			}
+		}
+		
+		ty+=5;
+		if(ty>285){
+			ty = 20;
+			conv.addPage();
+		}
+	}
+	
+	converter.save(name+'.pdf');
+	
+	conv.autoPrint();
+	conv.output("dataurlnewwindow");
 }
 
 function exportJSON(html,name) {
-	name.replace(/[^a-z ]/gi,"");
+	name = name.replace(/[^a-z|1-9]/gi,"_");
 	
 	var rowArray = new Array();
 	

@@ -60,7 +60,7 @@ function getNewRow(atIndex){
     row = row.replace("{INDEX}",atIndex);
 
 
-	var speaker = '<input class="uin" placeholder=" ">';
+	var speaker = '<input class="uin" placeholder=" " list = "speakerlist">';
 
     row = row.replace("{SPEAKER}",speaker);
 
@@ -151,10 +151,13 @@ function attachHandlers() {
 	//Unfocus UIE
 	$("td .uin").off("blur");
 	$("td .uin").blur( function() {
-		
-		if($(this).val() !== "") {
-			$(this).parent().html(parseInput($(this).val()));//The val of the UIE is the html of the parent TD (pard)
+		var val = $(this).val();
+		if(val !== "") {
+			$(this).parent().html(parseInput(val));//The val of the UIE is the html of the parent TD (pard)
 			attachHandlers();
+			if(!$(this).hasClass("text")) {
+				listSpeakers();
+			}
 		}
 	});
 	
@@ -180,7 +183,7 @@ function attachHandlers() {
 		if($(this).hasClass("text")) {//Textarea/Input differ depending on collumn
 			$(this).html('<textarea class = "uin caret" placeholder = " "></textarea>');
 		} else {
-			$(this).html('<input class = "uin caret" placeholder =" ">');
+			$(this).html('<input class = "uin caret" placeholder =" " list = "speakerlist">');
 		}
 		
 		$(this).find(".uin").val(parseHTMLToInput(text));
@@ -221,7 +224,8 @@ function attachHandlers() {
 			case 83://s - save (+Ctrl)
 				if(event.ctrlKey){
 					event.preventDefault();
-					exportJSON($("#table"),"text");
+					var name = prompt("How to name the file?");
+					exportPDF(exportJSON($("#table"),name),name);
 				}
 				break;
 				
@@ -288,4 +292,29 @@ function insertRow(atIndex){
     }
 	index++;
     attachHandlers();
+}
+
+
+/**
+ * Set ups the datalist with all speakers.
+ * 
+ */
+function listSpeakers() {
+	var datalist = $("#speakerlist");
+	var speakers = $("td:first-child");
+	
+	var arr = new Array();
+	
+	speakers.each(function(){
+		let val = parseHTMLToInput($(this).html());
+		if(!arr.includes(val)) {
+			arr.push(val);
+		}
+	});
+	
+	datalist.html("");
+	
+	for(s of arr){
+		datalist.append("<option value = \""+s+"\">");
+	}
 }
