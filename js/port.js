@@ -36,9 +36,9 @@ function exportPDF(json, name) {
 		}
 	}
 	
-	converter.save(name+'.pdf');
+	conv.save(name+'.pdf');
 	
-	conv.autoPrint();
+	//conv.autoPrint();
 	conv.output("dataurlnewwindow");
 }
 
