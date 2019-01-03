@@ -255,6 +255,14 @@ function attachHandlers() {
 				car.removeClass("caretBelow");
 
 				break;
+			case 46://delete (!Ctrl)
+			
+				var car = $(".caretBelow");
+				if(event.ctrlKey||$(".uin:focus").length||!car.length||!confirm("Delete line?")){
+					break;
+				}	
+				deleteRow(parseInt(car.attr("id")));
+				break;
 			default: //any other key
 				break;
 		}
@@ -267,6 +275,8 @@ function attachHandlers() {
  * Inserts a new row at a given Index.
  * If the Index is the "document-wide" index, the row will be appended at the end.
  * 
+ * The indices of following rows will be shifted accordingly.
+ *
  * @param atIndex The index where the row should be inserted at.
  */
 function insertRow(atIndex){
@@ -295,6 +305,29 @@ function insertRow(atIndex){
     }
 	index++;
     attachHandlers();
+}
+
+/**
+ * Deletes the row at the given index.
+ *
+ * The indices of following rows will be shifted accordingly.
+ * 
+ * @param atIndex The index where the row should be deleted at.
+ */
+function deleteRow(atIndex){
+	
+	tr = $("tr#"+atIndex);
+	tr.attr("id",-1);
+		
+	//shift the indices of all following rows
+	tr.nextAll("tr").each(function() {
+		$(this).attr("id",parseInt($(this).attr("id"))-1);
+	});
+	
+	tr.prev("tr").addClass("caretBelow");
+	tr.remove();
+	
+	index--;
 }
 
 
