@@ -34,7 +34,9 @@ function exportPDF(json, name) {
 		}
 		for(txt of text){
 			for(line of txt){
-				
+				if(row.isSdir){
+					line = "<i>"+line+"</i>";
+				}
 				conv.fromHTML(line,tx,ty);
 				//conv.text(line,50,ty);
 				//console.log(ty+" : "+line);
@@ -103,7 +105,6 @@ function exportJSON(html,name) {
 }
 
 function importJSON(json){
-	//console.log(json);
 	rowArray = JSON.parse(json);
 	//console.log("array"+rowArray);
 	t = $("#table");
@@ -114,7 +115,7 @@ function importJSON(json){
 		
 		r=$("tr:last");
 		
-		var data = row.isSdir?'<td class="sdir" colspan="2"><i>{TEXT}</i></td>':'<td>{SPEAKER}</td><td class="text">{TEXT}</td>';
+		var data = row.isSdir?'<td class="sdir" colspan="2">{TEXT}</td>':'<td>{SPEAKER}</td><td class="text">{TEXT}</td>';
 		if(!row.isSdir){
 			data = data.replace("{SPEAKER}",parseInput(row.speaker));
 		} 

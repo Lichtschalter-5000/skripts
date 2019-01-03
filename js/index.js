@@ -26,11 +26,18 @@ $(document).ready( function (){
 		}
 		setup("load");
 	});
+	
+	$("button#loadhtmlButton").on("click", function(){
+		if(!document.getElementById("loadhtml").files.length||!confirm("Load the file?")) {
+			return;
+		}
+		setup("importhtml");
+	});
 
 });
 
 /**Set up the tablebody
- *@param action "new" to set up a blank document, "load" to load document from file
+ *@param action "new" to set up a blank document, "load" to load document from file, "importhtml" to import HTML-File (from MSW)
  */
 function setup(action){ 
 	//reset the table
@@ -43,6 +50,7 @@ function setup(action){
 			break;
 		
 		case "load":
+		
 			//https://stackoverflow.com/questions/36127648/uploading-a-json-file-and-using-it
 			var fr = new FileReader();
 			fr.readAsText(document.getElementById("loadfile").files.item(0));
@@ -50,6 +58,22 @@ function setup(action){
 				importJSON(e.target.result);
 			}
 			index = parseInt($("#table").find("tr:last").attr("id"));
+			break;
+			
+		case "importhtml":
+			var fr = new FileReader();
+			fr.readAsText(document.getElementById("loadhtml").files.item(0));
+			fr.onload = function(e) {
+				var text = e.target.result.replace(/(.|\n)*<body(.|\n)+?\)/gi,"").replace(/<\/body>(.|\n)*/,"");
+				//console.log(text);
+				$("body").append("<div id=\"importhtml\"></div>");
+				$("#importhtml").html(text);//take body and only after first closing parentheses (because title)
+				importHTML(document.getElementById("loadhtml").files.item(0).name.replace(/\..*/gi,""));
+			}
+			break;
+			
+		default:
+			console.err("Invalid action for setup: "+action);
 			break;
 	}
 }

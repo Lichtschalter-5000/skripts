@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-latest.js"></script>-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
 	
     <script src="js/index.js"></script>
 	<script src="js/replace.js"></script>
 	<script src="js/port.js"></script>
+	<script src="js/parse.js"></script>
 	
 	<link rel = "stylesheet" type="text/css" href = "css/caret.css">
 	<link rel = "stylesheet" type="text/css" href = "css/styling.css">
@@ -16,6 +18,8 @@
 <body>
 	<header>
 	<input type="file" id="loadfile" accept = ".json" value ="File..."><button id="loadfileButton">Load File</button>
+	<br>
+	<input type="file" id="loadhtml" accept = ".htm" value ="Word..."><button id="loadhtmlButton">Load html from MSW</button>
 	<br>
 	<button id="newDoc">New File</button>
 	<hr/>
