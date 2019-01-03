@@ -37,10 +37,10 @@ function exportPDF(json, name) {
 				
 				conv.fromHTML(line,tx,ty);
 				//conv.text(line,50,ty);
-				console.log(ty+" : "+line);
+				//console.log(ty+" : "+line);
 				ty+=5;
 				if(ty>=280){
-					console.log("ad");
+					//console.log("add page");
 					ty = 20;
 					conv.addPage();
 					conv.fromHTML(speaker+" (f.):",20,ty);
@@ -86,20 +86,20 @@ function exportJSON(html,name) {
 		rowArray.push(row);
 	});
 	
-	if(name){
+	var jsonstring = JSON.stringify(rowArray,null,"\t");
+	if(name){		
 		name = name.replace(/[^a-z|1-9]/gi,"_");
 		//https://stackoverflow.com/questions/33271555/download-json-object-as-json-file-using-jquery
 		$("<a />", {
 			"download": name+".json",
-			"href" : "data:application/json," + encodeURIComponent(JSON.stringify(rowArray))
+			"href" : "data:application/json," + encodeURIComponent(jsonstring)
 		}).appendTo("body")
 		.click(function() {
 			$(this).remove()
 		})[0].click();
 	}
-	
-	
-	return JSON.stringify(rowArray);
+	//console.log(jsonstring);
+	return jsonstring;
 }
 
 function importJSON(json){
