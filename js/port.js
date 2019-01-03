@@ -13,9 +13,12 @@ function exportPDF(json, name) {
 	conv.setFontStyle("normal");
 	
 	var ty = 30;
+	var tx = 20;
 	for(row of rowArray){
+		if(!row.isSdir){
+			var speaker = parseInput(row.speaker);
+		}
 		
-		let speaker = parseInput(row.speaker);
 		let text = parseInput(row.text).split("<br>");
 		for(var b = 0; b < text.length;b++){
 			text[b] = conv.splitTextToSize(text[b],150);
@@ -24,15 +27,20 @@ function exportPDF(json, name) {
 		// conv.setFont("Helvetica");
 		// conv.setFontSize(15);
 		// conv.setFontStyle("normal");
-		conv.fromHTML(speaker+":",20,ty);
-		
+		tx = 20;
+		if(!row.isSdir){
+			conv.fromHTML(speaker+":",tx,ty);
+			tx = 50;
+		}
 		for(txt of text){
 			for(line of txt){
 				
-				conv.fromHTML(line,50,ty);
+				conv.fromHTML(line,tx,ty);
 				//conv.text(line,50,ty);
+				console.log(ty+" : "+line);
 				ty+=5;
-				if(ty>285){
+				if(ty>=280){
+					console.log("ad");
 					ty = 20;
 					conv.addPage();
 					conv.fromHTML(speaker+" (f.):",20,ty);
@@ -60,9 +68,16 @@ function exportJSON(html,name) {
 	
 	html.find("tr").each(function(){
 		row = new Object();
-		row.speaker = $(this).find("td:first .uin").length?$(this).find("td:first .uin").html() : parseHTMLToInput($(this).find("td:first").html()); 
 		
-		row.text = $(this).find("td.text .uin").length?$(this).find("td.text .uin").html() : parseHTMLToInput($(this).find("td.text").html()); 
+		row.isSdir = $(this).find("td:first").is(".sdir");
+		//Bug: Why the hell is the tr not .sdir?!
+		if(row.isSdir){
+			row.text = $(this).find("td.sdir .uin").length?$(this).find("td.sdir .uin").val() : parseHTMLToInput($(this).find("td.sdir").html());
+		} else {
+			row.speaker = $(this).find("td:first .uin").length?$(this).find("td:first .uin").val() : parseHTMLToInput($(this).find("td:first").html()); 
+		
+			row.text = $(this).find("td.text .uin").length?$(this).find("td.text .uin").val() : parseHTMLToInput($(this).find("td.text").html()); 
+		}
 		row.id = $(this).attr("id");
 		
 		row.hasCaret = $(this).is(".caret");
@@ -99,8 +114,12 @@ function importJSON(json){
 		
 		r=$("tr:last");
 		
-		r.append("<td>"+parseInput(row.speaker)+"</td><td class=\"text\">"+parseInput(row.text)+"</td>");
-		
+		var data = row.isSdir?'<td class="sdir" colspan="2"><i>{TEXT}</i></td>':'<td>{SPEAKER}</td><td class="text">{TEXT}</td>';
+		if(!row.isSdir){
+			data = data.replace("{SPEAKER}",parseInput(row.speaker));
+		} 
+		data = data.replace("{TEXT}",parseInput(row.text));
+		r.append(data);
 		
 		r.attr("id", row.id);
 		if(row.hasCaret) {

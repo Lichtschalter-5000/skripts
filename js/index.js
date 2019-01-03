@@ -2,6 +2,8 @@
 var index = 0;
 //Template for a new row
 let newrow = '<tr class = "caret" id={INDEX}><td>{SPEAKER}</td><td class="text">{TEXT}</td></tr>\n';
+//Template for a new stagedirection row
+let newrowSdir = '<tr class = "sdir caret" id={INDEX}><td class="sdir" colspan="2">{TEXT}</td></tr>\n';
 
 
 $(document).ready( function (){
@@ -56,20 +58,26 @@ function setup(action){
  * Helper-Method to get a new Row
  *
  * @param atIndex Where the row belongs
+ * @param func Extra functionalities. Currently supported: "sdir" for "Stage direction"
  * @return The complete row to insert
  */
-function getNewRow(atIndex){
-    var row = newrow;
-    row = row.replace("{INDEX}",atIndex);
-
-
-	var speaker = '<input class="uin" placeholder=" " list = "speakerlist">';
-
-    row = row.replace("{SPEAKER}",speaker);
-
-    var text = '<textarea class="uin" placeholder=" "></textarea>';
-
-    row = row.replace("{TEXT}",text);
+function getNewRow(atIndex,func){
+	switch(func){
+	case "sdir":
+		var row = newrowSdir;
+		var text = '<textarea class="sdir uin" placeholder=" "></textarea>';		
+		break;
+		
+	default:	
+		var row = newrow;
+		var speaker = '<input class="uin" placeholder=" " list = "speakerlist">';
+		var text = '<textarea class="uin" placeholder=" "></textarea>';
+		row = row.replace("{SPEAKER}",speaker);
+		break;
+	}
+	
+	row = row.replace("{TEXT}",text);
+	row = row.replace("{INDEX}",atIndex);
 
     return row;
 }
@@ -185,6 +193,8 @@ function attachHandlers() {
 		
 		if($(this).hasClass("text")) {//Textarea/Input differ depending on collumn
 			$(this).html('<textarea class = "uin caret" placeholder = " "></textarea>');
+		} else if($(this).hasClass("sdir")) {
+			$(this).html('<textarea class = "uin sdir caret" placeholder = " "></textarea>');
 		} else {
 			$(this).html('<input class = "uin caret" placeholder =" " list = "speakerlist">');
 		}
@@ -230,6 +240,22 @@ function attachHandlers() {
 					var name = prompt("How to name the file?");
 					exportPDF(exportJSON($("#table"),name),name);
 				}
+				break;
+				
+			case 82://r - stage direction (+Ctrl)
+				var car = $(".caretBelow"); 
+				
+				if(!event.ctrlKey||$(".uin:focus").length||!car.length){//only if nothing is focussed
+					break;
+				}
+					event.preventDefault();
+				
+				
+				insertRow(parseInt(car.attr("id")),"sdir");
+				
+				car.removeClass("caretBelow");
+			
+				
 				break;
 				
 			case 13://ENTER (+Ctrl) - create new line
@@ -278,11 +304,12 @@ function attachHandlers() {
  * The indices of following rows will be shifted accordingly.
  *
  * @param atIndex The index where the row should be inserted at.
+ * @param func Extra functionalities. Currently supported: "sdir" for "Stage direction"
  */
-function insertRow(atIndex){
+function insertRow(atIndex, func){
     if(atIndex === index ){
         //append:
-        $("#table").append(getNewRow(index));
+        $("#table").append(getNewRow(index,func));
         $("#table").find("tr:last").find("td .uin:first").focus();
 		$("#table").find("tr:last").find("td .uin:first").addClass("caret");
         
@@ -295,7 +322,7 @@ function insertRow(atIndex){
 			$(this).attr("id",parseInt($(this).attr("id"))+1);
 		});
 		
-		tr.after(getNewRow(atIndex+1));
+		tr.after(getNewRow(atIndex+1,func));
 		
 		
 		$("tr.caret td .uin:first").focus();
