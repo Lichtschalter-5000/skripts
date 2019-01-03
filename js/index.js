@@ -6,8 +6,11 @@ let newrow = '<tr class = "caret" id={INDEX}><td>{SPEAKER}</td><td class="text">
 
 $(document).ready( function (){
 	//New Document is set up
-	setup("new");
-
+	if(document.getElementById("loadfile").files.length){
+		setup("load");
+	}else {
+		setup("new");
+	}
 	//Create a new Document
 	$("button#newDoc").on("click", function(){
 		if(confirm("Set up a new Document?")){
