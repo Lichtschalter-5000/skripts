@@ -1,3 +1,45 @@
+body {
+	font-family: 'Open Sans', sans-serif;
+}
+
 td.sdir{
 	font-style: italic;
+}
+
+#table, tr, td{
+	border-style: none;
+	
+}
+
+th{
+	text-align:center;
+}
+
+td{
+	vertical-align: top;
+	padding: 2.5px;
+}
+
+td:not(.text):not(.sdir){
+	text-align: right;
+	padding-right: 7.5px;
+}
+
+td.sdir{
+	padding-left: 10%;
+}
+
+table{
+	
+	padding-left:5%;
+	padding-right:7.5%;
+}
+
+.uin{
+	width:95%;
+	height:100%;
+}
+
+th {
+	padding-bottom:10px;
 }

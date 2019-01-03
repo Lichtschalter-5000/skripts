@@ -4,6 +4,8 @@ function exportPDF(json, name) {
 	var conv = new jsPDF();
 	var rowArray = JSON.parse(json);
 	
+	conv.setFont("Helvetica");
+	
 	conv.setFontSize(16);
 	conv.setFontStyle("bold");
 	

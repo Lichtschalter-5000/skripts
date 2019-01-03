@@ -7,7 +7,7 @@ tr.caret, tr.caret .uin{
 
 
 
-tr .uin.caret, td.caret {
+tr.caret .uin.caret, td.caret {
 	
 	background-color: rgba(220,50,50,0.75);
 }
@@ -22,4 +22,12 @@ tr.caretBelow td{
 tr:not(.caret) .uin:placeholder-shown {
 	background-color: #f3f3f3;
 	border-style: none;
+}
+
+tr:hover td {
+	background-color: rgba(220,100,100,0.1);
+}
+
+tr:not(.caret) td:hover {
+	background-color: rgba(220,50,50,0.25);
 }
