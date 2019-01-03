@@ -16,17 +16,27 @@ function exportPDF(json, name) {
 	for(row of rowArray){
 		
 		let speaker = parseInput(row.speaker);
-		let text = conv.splitTextToSize(parseInput(row.text),150);
+		let text = parseInput(row.text).split("<br>");
+		for(var b = 0; b < text.length;b++){
+			text[b] = conv.splitTextToSize(text[b],150);
+		}
 		
-		conv.text(speaker,20,ty);
-		for(t of text){
-			
-			conv.text(t,50,ty);
-			ty+=5;
-			if(ty>285){
-				ty = 20;
-				conv.addPage();
-				conv.text(speaker+"( f.)",20,ty);
+		// conv.setFont("Helvetica");
+		// conv.setFontSize(15);
+		// conv.setFontStyle("normal");
+		conv.fromHTML(speaker+":",20,ty);
+		
+		for(txt of text){
+			for(line of txt){
+				
+				conv.fromHTML(line,50,ty);
+				//conv.text(line,50,ty);
+				ty+=5;
+				if(ty>285){
+					ty = 20;
+					conv.addPage();
+					conv.fromHTML(speaker+" (f.):",20,ty);
+				}
 			}
 		}
 		
