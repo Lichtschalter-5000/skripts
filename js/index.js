@@ -140,16 +140,24 @@ function attachHandlers() {
 			
 
 				
-				if($(this).closest("tr").is(":not(tr:last)")&&!$(this).parent().next("td").find(".uin").length) {//TR not at the end, next UIE not in the same row
+				if($(this).closest("tr").is(":not(tr:last)")&&!$(this).parent().next("td").find(".uin").length ) {//TR not at the end, next UIE not in the same row
 					if($(this).parent().is("td:last-child")) {//Last UIE in the row,
-						$(this).closest("tr").addClass("caretBelow");// move Caret below
-						$(".caret").removeClass("caret");
-						$(this).blur(); //Escape the UIE
+						if(event.which!==9){//not TAB
+							$(this).closest("tr").addClass("caretBelow");// move Caret below
+							$(".caret").removeClass("caret");
+							$(this).blur(); //Escape the UIE
+						} else {
+							next = $(this).closest("tr").next("tr").find("td .uin");
+							if(next.length) {
+								next.focus();
+							} else {
+							$(this).closest("tr").next("tr").find("td:first-child").click();
+							}
+						}
 					} else { //Move to next UIE in row
 						$(this).parent("td").next("td").click();//activate it
 					}
-				} 
-				else if($(this).parent().is("td:last-child")){//Last ever UIE was broken out of -> need to insert a new row
+				} else if($(this).parent().is("td:last-child")){//Last ever UIE was broken out of -> need to insert a new row
 					$(".caret").removeClass("caret");
 					insertRow(parseInt($(this).closest("tr").attr("id")));
 				} 
@@ -157,10 +165,13 @@ function attachHandlers() {
 					
 					next = $(this).parent().next("td").find(".uin");//UIE->TD->sibling TD->child UIE
 					if(next.length){ //if the next UIE exists move to it
-						next.focus();  
-						next.addClass("caret");
+						next.focus();
 					} else {
-						$(this).blur(); //only escape this one
+						//Jump to next row and edit
+						next = $(this).closest("tr").next("td").find("td");
+						next.click();
+						
+						//$(this).blur(); //only escape this one
 					}
 				}
               
