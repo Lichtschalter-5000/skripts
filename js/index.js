@@ -197,32 +197,61 @@ function attachHandlers() {
         }
     });
 	
-	/*//Autocompletion for the speaker
+	//Autocompletion for the speaker
 	$("td.speaker input").off("keyup");
-	$("td.speaker input").keyup(function() {
+	$("td.speaker input").keyup(function(event) {
+		if(/^[^a-z]$|.{2,}/gi.test(event.key)){//No chars outside a-z should fire this
+			console.log(event.key);
+			return;
+		}
+		
 		var options = JSON.parse($("#speakerlist").find("p").html());
 		var q = $(this).val();
-		$(this).val(options.find(function(e){
+		var found = options.find(function(e){
 			regex = new RegExp("^"+q+".*","gi");
-			console.log(q+"->"+e+" : "+regex.test(e));
-			return regex.test(e);
-		}));
-	});*/
+			match = regex.test(e);
+			console.log(q+"->"+e+" : "+match);
+			return match;
+		});
+		
+		if(found){
+			found = found.substr(q.length);
+			if(!event.shiftKey||q.length===1){
+				found = found.toLowerCase();
+			}
+			console.log("q:"+q+"found:"+found);
+			$(this).val(q+found);
+			//https://stackoverflow.com/questions/499126/jquery-set-cursor-position-in-text-area
+			t = $(this)[0];
+			if (t.setSelectionRange) {
+				t.setSelectionRange(q.length, q.length+found.length);
+			} else if (t.createTextRange) {
+				var range = t.createTextRange();
+				range.collapse(true);
+				range.moveEnd('character', q.length+found.length);
+				range.moveStart('character', q.length);
+				range.select();
+				console.log("range");
+			}
+		}
+	});
 	
 	
 	//Unfocus UIE
 	$("td .uin").off("blur");
 	$("td .uin").blur( function() {
 		var val = $(this).val();
-		if($(this).parent().is(".speaker")){
+		sp = $(this).parent().hasClass("speaker");
+		if(sp){
 			val = val.toUpperCase();
 		}
 		if(val !== "") {
 			$(this).parent().html(parseInput(val));//The val of the UIE is the html of the parent TD (first it's parsed for styling)
-			attachHandlers();
-			if($(this).parent().hasClass("speaker")) {
+			if(sp) {
 				listSpeakers();
+			} else {
 			}
+			attachHandlers();
 		}
 	});
 	
