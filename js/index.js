@@ -278,7 +278,9 @@ function attachHandlers() {
 		
 		var text = $(this).html();
 		
-		if($(this).hasClass("text")) {//Textarea/Input differ depending on collumn
+		if($(this).hasClass("invisiblerow")){//May not edit invisiblerow
+			return;
+		} else if($(this).hasClass("text")) {//Textarea/Input differ depending on collumn
 			$(this).html('<textarea class = "uin caret" placeholder = " "></textarea>');
 		} else if($(this).hasClass("sdir")) {
 			$(this).html('<textarea class = "uin sdir caret" placeholder = " "></textarea>');
@@ -345,12 +347,12 @@ function attachHandlers() {
 				
 				break;
 				
-			case 13://ENTER (+Ctrl) - create new line
-				if(!event.ctrlKey||$(".uin:focus").length){//only if nothing is focussed
+			case 13://ENTER (+Ctrl) - edit line
+				var car = $(".caretBelow"); 
+				if(!event.ctrlKey||$(".uin:focus").length||car.hasClass("invisiblerow")){//only if nothing is focussed
 					break;
 				}
 				
-				var car = $(".caretBelow"); 
 				car.find("td:first").click();
 				car.removeClass("caretBelow");
 				break;
