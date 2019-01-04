@@ -17,7 +17,8 @@ function exportPDF(json, name) {
 	var ty = 30;
 	var tx = 20;
 	for(row of rowArray){
-		if(!row.isSdir){
+		isSdir = !(!!row.speaker);
+		if(!isSdir){
 			var speaker = parseInput(row.speaker);
 		}
 		
@@ -30,13 +31,13 @@ function exportPDF(json, name) {
 		// conv.setFontSize(15);
 		// conv.setFontStyle("normal");
 		tx = 20;
-		if(!row.isSdir){
+		if(!isSdir){
 			conv.fromHTML(speaker+":",tx,ty);
 			tx = 50;
 		}
 		for(txt of text){
 			for(line of txt){
-				if(row.isSdir){
+				if(isSdir){
 					line = "<i>"+line+"</i>";
 				}
 				conv.fromHTML(line,tx,ty);
@@ -73,19 +74,15 @@ function exportJSON(html,name) {
 	html.find("tr").each(function(){
 		row = new Object();
 		
-		row.isSdir = $(this).find("td:first").is(".sdir");
+		var isSdir = $(this).find("td:first").is(".sdir");
 		//Bug: Why the hell is the tr not .sdir?!
-		if(row.isSdir){
+		if(isSdir){
 			row.text = $(this).find("td.sdir .uin").length?$(this).find("td.sdir .uin").val() : parseHTMLToInput($(this).find("td.sdir").html());
 		} else {
 			row.speaker = $(this).find("td.speaker .uin").length?$(this).find("td.speaker .uin").val() : parseHTMLToInput($(this).find("td.speaker").html()); 
 		
 			row.text = $(this).find("td.text .uin").length?$(this).find("td.text .uin").val() : parseHTMLToInput($(this).find("td.text").html()); 
 		}
-		row.id = $(this).attr("id");
-		
-		row.hasCaret = $(this).is(".caret");
-		row.hasCaretBelow = $(this).is(".caretBelow");
 		
 		rowArray.push(row);
 	});
@@ -111,28 +108,23 @@ function importJSON(json){
 	//console.log("array"+rowArray);
 	t = $("#table");
 	
+	var id = 0;
 	
 	for(row of rowArray){
-		t.append("<tr></tr>");
+		t.append('<tr id="'+(id++)+'"></tr>');
 		
 		r=$("tr:last");
 		
 		var data = row.isSdir?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
-		if(!row.isSdir){
+		if(row.speaker){
 			data = data.replace("{SPEAKER}",parseInput(row.speaker));
 		} 
 		data = data.replace("{TEXT}",parseInput(row.text));
 		r.append(data);
-		
-		r.attr("id", row.id);
-		if(row.hasCaret) {
-		r.addClass("caret");
-		r.find("td:last").addClass("caret");
-		} else if (row.hasCaretBelow) {
-		r.addClass("caretBelow");
-		}
-		
 	}
+	
+	$("tr:last").addClass("caretBelow");
+	
 	attachHandlers();
 	listSpeakers();
 }
