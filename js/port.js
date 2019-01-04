@@ -78,7 +78,7 @@ function exportJSON(html,name) {
 		if(row.isSdir){
 			row.text = $(this).find("td.sdir .uin").length?$(this).find("td.sdir .uin").val() : parseHTMLToInput($(this).find("td.sdir").html());
 		} else {
-			row.speaker = $(this).find("td:first .uin").length?$(this).find("td:first .uin").val() : parseHTMLToInput($(this).find("td:first").html()); 
+			row.speaker = $(this).find("td.speaker .uin").length?$(this).find("td.speaker .uin").val() : parseHTMLToInput($(this).find("td.speaker").html()); 
 		
 			row.text = $(this).find("td.text .uin").length?$(this).find("td.text .uin").val() : parseHTMLToInput($(this).find("td.text").html()); 
 		}
@@ -117,7 +117,7 @@ function importJSON(json){
 		
 		r=$("tr:last");
 		
-		var data = row.isSdir?'<td class="sdir" colspan="2">{TEXT}</td>':'<td>{SPEAKER}</td><td class="text">{TEXT}</td>';
+		var data = row.isSdir?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
 		if(!row.isSdir){
 			data = data.replace("{SPEAKER}",parseInput(row.speaker));
 		} 
@@ -134,4 +134,5 @@ function importJSON(json){
 		
 	}
 	attachHandlers();
+	listSpeakers();
 }

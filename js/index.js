@@ -1,7 +1,7 @@
 //The Amout of Lines
 var index = 0;
 //Template for a new row
-let newrow = '<tr class = "caret" id={INDEX}><td>{SPEAKER}</td><td class="text">{TEXT}</td></tr>\n';
+let newrow = '<tr class = "caret" id={INDEX}><td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td></tr>\n';
 //Template for a new stagedirection row
 let newrowSdir = '<tr class = "sdir caret" id={INDEX}><td class="sdir" colspan="2">{TEXT}</td></tr>\n';
 
@@ -45,6 +45,7 @@ function setup(action){
 	switch(action){
 		case "new"://Set up a new Document
 			index = 0;
+			listSpeakers();
 			insertRow(index);
 			$("#0").addClass("caret");
 			break;
@@ -76,6 +77,7 @@ function setup(action){
 			console.err("Invalid action for setup: "+action);
 			break;
 	}
+	
 }
 
 /** 
@@ -180,17 +182,34 @@ function attachHandlers() {
 				$(".caret").removeClass("caret");
 				$(this).blur();
 				break;
+				
         }
     });
+	
+	//Autocompletion for the speaker
+	$("td.speaker input").off("keyup");
+	$("td.speaker input").keyup(function() {
+		var options = JSON.parse($("#speakerlist").find("p").html());
+		var q = $(this).val();
+		$(this).val(options.find(function(e){
+			regex = new RegExp("^"+q+".*","gi");
+			console.log(q+"->"+e+" : "+regex.test(e));
+			return regex.test(e);
+		}));
+	});
+	
 	
 	//Unfocus UIE
 	$("td .uin").off("blur");
 	$("td .uin").blur( function() {
 		var val = $(this).val();
+		if($(this).parent().is(".speaker")){
+			val = val.toUpperCase();
+		}
 		if(val !== "") {
-			$(this).parent().html(parseInput(val));//The val of the UIE is the html of the parent TD (pard)
+			$(this).parent().html(parseInput(val));//The val of the UIE is the html of the parent TD (first it's parsed for styling)
 			attachHandlers();
-			if(!$(this).hasClass("text")) {
+			if($(this).parent().hasClass("speaker")) {
 				listSpeakers();
 			}
 		}
@@ -388,13 +407,13 @@ function deleteRow(atIndex){
  */
 function listSpeakers() {
 	var datalist = $("#speakerlist");
-	var speakers = $("td:first-child");
+	var speakers = $("td.speaker");
 	
 	var arr = new Array();
 	
 	speakers.each(function(){
 		let val = parseHTMLToInput($(this).html());
-		if(!arr.includes(val)) {
+		if(!arr.includes(val)&&!(/^<input.*/gi.test(val))) {
 			arr.push(val);
 		}
 	});
@@ -404,4 +423,5 @@ function listSpeakers() {
 	for(s of arr){
 		datalist.append("<option value = \""+s+"\">");
 	}
+	datalist.append("<p>"+JSON.stringify(arr)+"</p>");
 }

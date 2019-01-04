@@ -19,12 +19,13 @@ function importHTML(name) {
 				text[0] = "undefined";
 			}
 			
-			tab.append('<tr id='+(ind++)+'><td>'+parseInput(text[0])+'</td><td class="text">'+parseInput(text[1])+'</td></tr>');
+			tab.append('<tr id='+(ind++)+'><td class="speaker">'+parseInput(text[0])+'</td><td class="text">'+parseInput(text[1])+'</td></tr>');
 		}
 	});
 	
 	html.remove("#importhtml");
 	attachHandlers();
+	listSpeakers();
 	
 	exportJSON($("#table"),name);
 }

@@ -20,7 +20,7 @@ td{
 	padding: 2.5px;
 }
 
-td:not(.text):not(.sdir){
+td.speaker{
 	text-align: right;
 	padding-right: 7.5px;
 }
