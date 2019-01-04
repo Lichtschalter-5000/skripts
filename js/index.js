@@ -186,7 +186,7 @@ function attachHandlers() {
         }
     });
 	
-	//Autocompletion for the speaker
+	/*//Autocompletion for the speaker
 	$("td.speaker input").off("keyup");
 	$("td.speaker input").keyup(function() {
 		var options = JSON.parse($("#speakerlist").find("p").html());
@@ -196,7 +196,7 @@ function attachHandlers() {
 			console.log(q+"->"+e+" : "+regex.test(e));
 			return regex.test(e);
 		}));
-	});
+	});*/
 	
 	
 	//Unfocus UIE
