@@ -200,29 +200,34 @@ function attachHandlers() {
 	//Autocompletion for the speaker
 	$("td.speaker input").off("keyup");
 	$("td.speaker input").keyup(function(event) {
-		if(/^[^a-z]$|.{2,}/gi.test(event.key)){//No chars outside a-z should fire this
-			console.log(event.key);
+		if(/^[^a-z 0-9]$|.{2,}/gi.test(event.key)){//No chars outside a-z should fire this
+			//console.log(event.key);
 			return;
 		}
+		event.preventDefault();
 		
+		$(this).val=$(this.val)+event.key;
+		
+		t = $(this)[0];
 		var options = JSON.parse($("#speakerlist").find("p").html());
-		var q = $(this).val();
+		var q = $(this).val().substr(0,t.selectionStart);
 		var found = options.find(function(e){
 			regex = new RegExp("^"+q+".*","gi");
 			match = regex.test(e);
-			console.log(q+"->"+e+" : "+match);
+			//console.log(q+"->"+e+" : "+match);
 			return match;
 		});
 		
 		if(found){
+			//console.log("q:"+q);
+			//console.log("f:"+found);
 			found = found.substr(q.length);
 			if(!event.shiftKey||q.length===1){
 				found = found.toLowerCase();
 			}
-			console.log("q:"+q+"found:"+found);
+			console.log("r:"+q+found+"\n");
 			$(this).val(q+found);
 			//https://stackoverflow.com/questions/499126/jquery-set-cursor-position-in-text-area
-			t = $(this)[0];
 			if (t.setSelectionRange) {
 				t.setSelectionRange(q.length, q.length+found.length);
 			} else if (t.createTextRange) {
