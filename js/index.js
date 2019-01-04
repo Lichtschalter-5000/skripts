@@ -4,6 +4,8 @@ var index = 0;
 let newrow = '<tr class = "caret" id={INDEX}><td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td></tr>\n';
 //Template for a new stagedirection row
 let newrowSdir = '<tr class = "sdir caret" id={INDEX}><td class="sdir" colspan="2">{TEXT}</td></tr>\n';
+//Invisible row at the top
+let invisiblerow = '<tr id="-1" class ="invisiblerow"><td colspan="2"></td></tr>';
 
 
 $(document).ready( function (){
@@ -41,7 +43,7 @@ $(document).ready( function (){
  */
 function setup(action){ 
 	//reset the table
-	$("#table").html("");
+	$("#table").html(invisiblerow);
 	switch(action){
 		case "new"://Set up a new Document
 			index = 0;
@@ -369,7 +371,7 @@ function attachHandlers() {
 			case 46://delete (!Ctrl)
 			
 				var car = $(".caretBelow");
-				if(event.ctrlKey||$(".uin:focus").length||!car.length||!confirm("Delete line?")){
+				if(event.ctrlKey||$(".uin:focus").length||car.attr("id")==="-1"||!car.length||!confirm("Delete line?")){
 					break;
 				}	
 				deleteRow(parseInt(car.attr("id")));

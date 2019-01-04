@@ -4,19 +4,25 @@ tr.caret, tr.caret .uin{
 	
 }
 
-
-
 tr.caret .uin.caret, td.caret {
 	
 	background-color: rgba(220,50,50,0.75);
 }
 
-tr.caretBelow td{
-	
+tr.caretBelow td, tr.invisiblerow.caretBelow td{
+	border-collapse:collapse;
 	border-bottom: 3px dashed aqua; 
-	
-	
 }
+
+tr.invisiblerow{
+	height: 0px;
+}
+
+
+tr td,tr.invisiblerow td{
+	border-bottom: 3px dashed rgba(0,0,0,0);
+}
+
 
 tr:not(.caret) .uin:placeholder-shown {
 	background-color: #f3f3f3;

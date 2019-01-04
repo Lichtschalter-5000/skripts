@@ -1,6 +1,7 @@
 function importHTML(name) {
 	html = $("#importhtml");
 	tab = $("#table");
+	tab.append(invisiblerow);
 	ind = 0;
 	
 	

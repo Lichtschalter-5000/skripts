@@ -71,7 +71,7 @@ function exportJSON(html,name) {
 	
 	var rowArray = new Array();
 	
-	html.find("tr").each(function(){
+	html.find("tr:not(tr#-1)").each(function(){
 		row = new Object();
 		
 		var isSdir = $(this).find("td:first").is(".sdir");
@@ -107,8 +107,11 @@ function importJSON(json){
 	rowArray = JSON.parse(json);
 	//console.log("array"+rowArray);
 	t = $("#table");
+	t.append(invisiblerow);
 	
 	var id = 0;
+	
+	
 	
 	for(row of rowArray){
 		t.append('<tr id="'+(id++)+'"></tr>');
