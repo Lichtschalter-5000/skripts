@@ -29,7 +29,7 @@ function exportPDF(json, name) {
 		
 		let text = parseInput(row.text).split("<br>");
 		for(var b = 0; b < text.length;b++){
-			text[b] = conv.splitTextToSize(text[b],150);
+			text[b] = conv.splitTextToSize(text[b],isSdir?170:150);
 		}
 		
 		// conv.setFont("Helvetica");
