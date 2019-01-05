@@ -1,5 +1,4 @@
 function exportPDF(json, name) {
-	name = name.replace(/[^a-z|1-9]/gi,"_");
 	
 	var conv = new jsPDF();
 	var rowArray = JSON.parse(json);
@@ -16,7 +15,13 @@ function exportPDF(json, name) {
 	
 	var ty = 30;
 	var tx = 20;
-	for(row of rowArray){
+	for(row of rowArray){//Every row
+		
+		if(ty>=280){
+			ty = 20;
+			conv.addPage();
+		}
+		
 		isSdir = !(!!row.speaker);
 		if(!isSdir){
 			var speaker = parseInput(row.speaker);
@@ -34,34 +39,41 @@ function exportPDF(json, name) {
 		if(!isSdir){
 			conv.fromHTML(speaker+":",tx,ty);
 			tx = 50;
+		} else {
+			tx = 35;
 		}
-		for(txt of text){
-			for(line of txt){
+		for(txt of text){//Every paragraph
+			for(var l=0; l<txt.length;l++){//Every line in paragraph
+				
+				line = txt[l];
+				
 				if(isSdir){
 					line = "<i>"+line+"</i>";
+					
 				}
 				conv.fromHTML(line,tx,ty);
 				//conv.text(line,50,ty);
 				//console.log(ty+" : "+line);
+				
 				ty+=5;
-				if(ty>=280){
+				if(ty>=280 && txt[l+1]){
 					//console.log("add page");
 					ty = 20;
 					conv.addPage();
 					conv.fromHTML(speaker+" (f.):",20,ty);
 				}
 			}
+			
 		}
 		
 		ty+=5;
-		if(ty>285){
-			ty = 20;
-			conv.addPage();
-		}
 	}
 	
-	conv.save(name+'.pdf');
-	
+	name = name.replace(/[^a-z|1-9]/gi,"_");
+
+	if(name){
+		conv.save(name+'.pdf');
+	}
 	//conv.autoPrint();
 	conv.output("dataurlnewwindow");
 }
@@ -118,7 +130,7 @@ function importJSON(json){
 		
 		r=$("tr:last");
 		
-		var data = row.isSdir?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
+		var data = (!row.speaker)?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
 		if(row.speaker){
 			data = data.replace("{SPEAKER}",parseInput(row.speaker));
 		} 
