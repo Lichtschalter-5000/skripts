@@ -131,7 +131,18 @@ function attachHandlers() {
 				event.preventDefault();	
 				
 				if(event.shiftKey){
-					//ToDo: jump to previous UIE
+					if($(this).parent().is("td:last-child:not(:first-child)")){
+						var prevtd = $(this).parent().prev("td");
+						console.log("x");
+					} else {
+						var prevtd = $(this).closest("tr").prev("tr").find("td:last-child");						
+					}
+					console.log($(this).parent().is("td:not(:first-child)"));
+					if(prevtd.find(".uin").length){
+						prevtd.find(".uin").focus();
+					} else {
+						prevtd.click();
+					}
 					break;
 				}
 				
@@ -196,6 +207,9 @@ function attachHandlers() {
 				$(this).blur();
 				break;
 				
+			case 82://r (+Ctrl) - Switch between SDir & normal text
+				
+				break;
         }
     });
 	
