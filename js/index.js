@@ -212,6 +212,9 @@ function attachHandlers() {
 				break;
 				
 			case 82://r (+Ctrl) - Toggle SDir / normal text
+				if(!event.ctrlKey){
+					break;
+				}
 				event.preventDefault();
 				
 				val = $(this).closest("tr").find("td textarea").val();
@@ -231,8 +234,9 @@ function attachHandlers() {
 				insertedrow.find("textarea").val(val).select();
 				
 				break;
-        }
+        }		
     });
+	
 	
 	//Autocompletion for the speaker
 	$("td.speaker input").off("keyup");
@@ -274,6 +278,16 @@ function attachHandlers() {
 			}
 		}
 	});
+	
+	
+
+	/*$("td textarea").on("keydown keyup", function(){ //Adapt vertical size of scrollbar
+		//https://stackoverflow.com/a/16620046
+		this.style.height = "1px";
+		this.style.height = (this.scrollHeight)+"px"; 
+		console.log("sldkf");
+	});*/
+	
 	
 	
 	//Unfocus UIE
@@ -324,7 +338,7 @@ function attachHandlers() {
 		}
 		
 		$(this).find(".uin").val(parseHTMLToInput(text));
-
+		
 		$(this).children().select();
 		$(this).off("click");
 	
