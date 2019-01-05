@@ -130,8 +130,8 @@ function importJSON(json){
 		
 		r=$("tr:last");
 		
-		var data = (!row.speaker)?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
-		if(row.speaker){
+		var data = (!row.speaker&&row.speaker!=="")?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
+		if(row.speaker||row.speaker===""){
 			data = data.replace("{SPEAKER}",parseInput(row.speaker));
 		} 
 		data = data.replace("{TEXT}",parseInput(row.text));
