@@ -25,10 +25,10 @@ Delete a line by pressing `CTRL`+ `Up Arrow` or `CTRL`+ `Down Arrow` to get a bl
 
 ## Style Elements 
 - To write **bold**, type the text in curly brackets `{ }`. 
-- To write *italic*, type the text in brackets/parentheses with asterisks `*( )*`. 
-- To write *italic* in brackets/parentheses, type the text in brackets/parentheses with underscores `_( )_`. 
+- To write *italic*, type the text in parentheses with asterisks `*( )*`. 
+- To write *italic* in parentheses, type the text in parentheses with underscores `_( )_`. 
 - To write underlined, type the text in square brackets `[ ]`. 
-- 
+
 
 ## Shortcuts
 
@@ -41,16 +41,17 @@ Delete a line by pressing `CTRL`+ `Up Arrow` or `CTRL`+ `Down Arrow` to get a bl
  - `CTRL` + `Up/Down Arrow`: blue line***********************
  - `INS`: Insert new line at blue line
  - `DEL`: Delete line above blue line 
- - `_( )_`: Text in brackets/parentheses will be *italic* in brackets/parentheses
- - `*( )*`: Text in brackets/parentheses will be *italic 
- - `[ ]`: Text in brackets/parentheses will be underlined 
- - `{ }`: Text in brackets/parentheses will be **bold**
- - `( )`: Text will simply be in brackets/parentheses 
+ - `_( )_`: Text in parentheses will be *italic* in parentheses
+ - `*( )*`: Text in parentheses will be *italic* 
+ - `[ ]`: Text in brackets will be underlined 
+ - `{ }`: Text in brackets will be **bold**
+ - `( )`: Text will simply be in parentheses 
 
 ## Tips 
 - After typing a speaker once, the program will automatically complete the name if you start to type it in a new text box for speakers.
 - Speakers will be written in CAPS automatically.
 - Stage directions will be written in *italic* automatically. 
-- 
+
+
 
 > Written with [StackEdit](https://stackedit.io/).
