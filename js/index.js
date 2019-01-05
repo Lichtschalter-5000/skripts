@@ -133,11 +133,9 @@ function attachHandlers() {
 				if(event.shiftKey){
 					if($(this).parent().is("td:last-child:not(:first-child)")){
 						var prevtd = $(this).parent().prev("td");
-						console.log("x");
 					} else {
 						var prevtd = $(this).closest("tr").prev("tr").find("td:last-child");						
 					}
-					console.log($(this).parent().is("td:not(:first-child)"));
 					if(prevtd.find(".uin").length){
 						prevtd.find(".uin").focus();
 					} else {
@@ -207,7 +205,24 @@ function attachHandlers() {
 				$(this).blur();
 				break;
 				
-			case 82://r (+Ctrl) - Switch between SDir & normal text
+			case 82://r (+Ctrl) - Toggle SDir / normal text
+				event.preventDefault();
+				
+				val = $(this).closest("tr").find("td textarea").val();
+				//console.log("val:"+val);
+				ind = parseInt($(this).closest("tr").attr("id"));
+				//console.log(ind);
+				wasSdir = $(this).hasClass("sdir");
+				//console.log(wasSdir);
+				deleteRow(ind);
+				
+				
+				insertRow(ind-1,wasSdir?"":"sdir");
+				
+				$(".caretBelow").removeClass("caretBelow");
+				
+				insertedrow = $("tr#"+ind);
+				insertedrow.find("textarea").val(val).select();
 				
 				break;
         }
