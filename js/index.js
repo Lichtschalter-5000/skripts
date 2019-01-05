@@ -278,7 +278,7 @@ function attachHandlers() {
 		
 		var text = $(this).html();
 		
-		if($(this).hasClass("invisiblerow")){//May not edit invisiblerow
+		if($(this).closest("tr").hasClass("invisiblerow")){//May not edit invisiblerow
 			return;
 		} else if($(this).hasClass("text")) {//Textarea/Input differ depending on collumn
 			$(this).html('<textarea class = "uin caret" placeholder = " "></textarea>');
