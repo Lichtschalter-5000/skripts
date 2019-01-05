@@ -22,19 +22,25 @@ $(document).ready( function (){
 		} 
 	});
 
-	$("button#loadfileButton").on("click", function(){
+	loadfile = function(){
 		if(!document.getElementById("loadfile").files.length||!confirm("Load the file?")) {
 			return;
 		}
 		setup("load");
-	});
+	};
 	
-	$("button#loadhtmlButton").on("click", function(){
+	$("button#loadfileButton").on("click", loadfile);
+	$("input#loadfile").on("change",loadfile);
+	
+	loadhtml = function(){
 		if(!document.getElementById("loadhtml").files.length||!confirm("Load the file?")) {
 			return;
 		}
 		setup("importhtml");
-	});
+	};
+	
+	$("button#loadhtmlButton").on("click", loadhtml);
+	$("input#loadhtml").on("click",loadhtml);
 
 });
 
