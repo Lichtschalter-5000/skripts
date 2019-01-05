@@ -22,7 +22,7 @@ function exportPDF(json, name) {
 			conv.addPage();
 		}
 		
-		isSdir = !(!!row.speaker);
+		isSdir = !(!!row.speaker&&row.speaker!=="");
 		if(!isSdir){
 			var speaker = parseInput(row.speaker);
 		}
