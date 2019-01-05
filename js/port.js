@@ -22,7 +22,7 @@ function exportPDF(json, name) {
 			conv.addPage();
 		}
 		
-		isSdir = !(!!row.speaker&&row.speaker!=="");
+		isSdir = !(!!row.speaker||row.speaker==="");
 		if(!isSdir){
 			var speaker = parseInput(row.speaker);
 		}
@@ -37,7 +37,7 @@ function exportPDF(json, name) {
 		// conv.setFontStyle("normal");
 		tx = 20;
 		if(!isSdir){
-			conv.fromHTML(speaker+":",tx,ty);
+			conv.fromHTML(speaker+(speaker.endsWith(":")||speaker===""?"":":"),tx,ty);
 			tx = 50;
 		} else {
 			tx = 35;
