@@ -239,15 +239,16 @@ function attachHandlers() {
 	
 	
 	//Autocompletion for the speaker
-	$("td.speaker input").off("keyup");
-	$("td.speaker input").keyup(function(event) {
+	$("td.speaker input").keydown(function(event) {
 		if(/^[^a-z 0-9]$|.{2,}/gi.test(event.key)){//No chars outside alphanumeric should fire this
 			//console.log(event.key);
 			return;
 		}
 		event.preventDefault();
 		
-		$(this).val=$(this.val)+event.shiftKey?event.key.toUpperCase():event.key;
+		
+		$(this).val($(this).val().substring(0,event.target.selectionStart)+(event.shiftKey?event.key.toUpperCase():event.key));
+		
 		
 		t = $(this)[0];
 		var options = JSON.parse($("#speakerlist").find("p").html());
