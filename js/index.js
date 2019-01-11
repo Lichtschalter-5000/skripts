@@ -357,16 +357,26 @@ function attachHandlers() {
 			
 		switch(event.which){
 			
-			case 40://Arrow down, move caret up
+			case 40://Arrow down, move caret down or move row
 				var oldtr = $(".caretBelow");
+				
+				if(event.shiftKey && event.ctrlKey && !oldtr.hasClass("invisiblerow") &&!oldtr.next().hasClass("invisiblerow")){
+					oldtr.insertAfter(oldtr.next());					
+					break;
+				}
 				
 				if(oldtr.next("tr").length){
 				oldtr.removeClass("caretBelow");
 				oldtr.next("tr").addClass("caretBelow");
 				}
 				break;
-			case 38://Arrow up, move caret down
+			case 38://Arrow up, move caret up or move row
 				var oldtr = $(".caretBelow");
+				
+				if(event.shiftKey && event.ctrlKey && !oldtr.hasClass("invisiblerow") &&!oldtr.prev().hasClass("invisiblerow")) {
+					oldtr.insertBefore(oldtr.prev());					
+					break;
+				}
 				
 				if(oldtr.prev("tr").length){
 				oldtr.removeClass("caretBelow");
