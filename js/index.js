@@ -210,16 +210,23 @@ function attachHandlers() {
 				}
 				event.preventDefault();
 				
-				val = $(this).closest("tr").find("td textarea").val();
+				parentTr = $(this).closest("tr");
+				
+				var val = parentTr.find("td textarea").val();
+				if(val == undefined){
+					val = parseHTMLToInput(parentTr.find("td.text").html());
+				}
 				//console.log("val:"+val);
-				wasSdir = $(this).hasClass("sdir");
+				var wasSdir = parentTr.hasClass("sdir");
 				//console.log(wasSdir);
-				insertRow(($(this).closest("tr").prev("tr"),wasSdir?"":"sdir"));
 				
-				$(this).closest("tr").prev("tr").find("textarea").val(val).select();
+				insertRow(parentTr,wasSdir?"":"sdir");
+				var insertedrow = parentTr.next("tr");
+				//console.log(insertedrow);
 				
-				deleteRow($(this).closest("tr"));
-				
+				deleteRow(parentTr);
+
+				insertedrow.find("textarea").val(val).select();	
 				$(".caretBelow").removeClass("caretBelow");
 				break;
         }		
@@ -263,7 +270,7 @@ function attachHandlers() {
 				range.moveEnd('character', q.length+found.length);
 				range.moveStart('character', q.length);
 				range.select();
-				console.log("range");
+				//console.log("range");
 			}
 		}
 	});
@@ -443,6 +450,7 @@ function attachHandlers() {
  * @param func Extra functionalities. Currently supported: "sdir" for "Stage direction"
  */
 function insertRow(row, func){
+	$(".caret").removeClass("caret");
     if(row.is("tr:last")){
         //append:
         $("#table").append(getNewRow(func));
@@ -460,8 +468,6 @@ function insertRow(row, func){
 
 /**
  * Deletes the given row.
- *
- * The indices of following rows will be shifted accordingly.
  * 
  * @param row The row to be deleted.
  */

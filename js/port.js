@@ -119,7 +119,6 @@ function importJSON(json){
 	rowArray = JSON.parse(json);
 	//console.log("array"+rowArray);
 	t = $("#table");
-	t.append(invisiblerow);
 	
 	for(row of rowArray){
 		t.append('<tr></tr>');
@@ -129,7 +128,9 @@ function importJSON(json){
 		var data = (!row.speaker&&row.speaker!=="")?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
 		if(row.speaker||row.speaker===""){
 			data = data.replace("{SPEAKER}",parseInput(row.speaker));
-		} 
+		} else {
+			r.addClass("sdir");
+		}
 		data = data.replace("{TEXT}",parseInput(row.text));
 		r.append(data);
 	}
