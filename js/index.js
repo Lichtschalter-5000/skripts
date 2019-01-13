@@ -1,11 +1,9 @@
-//The Amout of Lines
-var index = 0;
 //Template for a new row
-let newrow = '<tr class = "caret" id={INDEX}><td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td></tr>\n';
+let newrow = '<tr class = "caret" ><td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td></tr>\n';
 //Template for a new stagedirection row
-let newrowSdir = '<tr class = "sdir caret" id={INDEX}><td class="sdir" colspan="2">{TEXT}</td></tr>\n';
+let newrowSdir = '<tr class = "sdir caret"><td class="sdir" colspan="2">{TEXT}</td></tr>\n';
 //Invisible row at the top
-let invisiblerow = '<tr id="-1" class ="invisiblerow"><td colspan="2"></td></tr>';
+let invisiblerow = '<tr class ="invisiblerow"><td colspan="2"></td></tr>';
 
 
 $(document).ready( function (){
@@ -52,21 +50,18 @@ function setup(action){
 	$("#table").html(invisiblerow);
 	switch(action){
 		case "new"://Set up a new Document
-			index = 0;
 			listSpeakers();
-			insertRow(index);
-			$("#0").addClass("caret");
+			insertRow($(".invisiblerow"));
+			$("tr:last").addClass("caret");
 			break;
 		
-		case "load":
-		
+		case "load":		
 			//https://stackoverflow.com/questions/36127648/uploading-a-json-file-and-using-it
 			var fr = new FileReader();
 			fr.readAsText(document.getElementById("loadfile").files.item(0));
 			fr.onload = function(e) {
 				importJSON(e.target.result);
 			}
-			index = parseInt($("#table").find("tr:last").attr("id"));
 			break;
 			
 		case "importhtml":
@@ -91,11 +86,10 @@ function setup(action){
 /** 
  * Helper-Method to get a new Row
  *
- * @param atIndex Where the row belongs
  * @param func Extra functionalities. Currently supported: "sdir" for "Stage direction"
  * @return The complete row to insert
  */
-function getNewRow(atIndex,func){
+function getNewRow(func){
 	switch(func){
 	case "sdir":
 		var row = newrowSdir;
@@ -111,7 +105,6 @@ function getNewRow(atIndex,func){
 	}
 	
 	row = row.replace("{TEXT}",text);
-	row = row.replace("{INDEX}",atIndex);
 
     return row;
 }
@@ -176,7 +169,7 @@ function attachHandlers() {
 					}
 				} else if($(this).parent().is("td:last-child")){//Last ever UIE was broken out of -> need to insert a new row
 					$(".caret").removeClass("caret");
-					insertRow(parseInt($(this).closest("tr").attr("id")));
+					insertRow($(this).closest("tr"));
 				} 
 				else { //Skip from UIE to the next one (if present)
 					
@@ -204,7 +197,7 @@ function attachHandlers() {
 				
 				if(event.which===40){//down
 					$(this).closest("tr").prev("tr").addClass("caretBelow");
-				} else if(event.which===38){//up
+				} else{//up
 					$(this).closest("tr").addClass("caretBelow");
 				}
 				$(".caret").removeClass("caret");
@@ -217,22 +210,24 @@ function attachHandlers() {
 				}
 				event.preventDefault();
 				
-				val = $(this).closest("tr").find("td textarea").val();
+				parentTr = $(this).closest("tr");
+				
+				var val = parentTr.find("td textarea").val();
+				if(val == undefined){
+					val = parseHTMLToInput(parentTr.find("td.text").html());
+				}
 				//console.log("val:"+val);
-				ind = parseInt($(this).closest("tr").attr("id"));
-				//console.log(ind);
-				wasSdir = $(this).hasClass("sdir");
+				var wasSdir = parentTr.hasClass("sdir");
 				//console.log(wasSdir);
-				deleteRow(ind);
 				
+				insertRow(parentTr,wasSdir?"":"sdir");
+				var insertedrow = parentTr.next("tr");
+				//console.log(insertedrow);
 				
-				insertRow(ind-1,wasSdir?"":"sdir");
-				
+				deleteRow(parentTr);
+
+				insertedrow.find("textarea").val(val).select();	
 				$(".caretBelow").removeClass("caretBelow");
-				
-				insertedrow = $("tr#"+ind);
-				insertedrow.find("textarea").val(val).select();
-				
 				break;
         }		
     });
@@ -275,7 +270,7 @@ function attachHandlers() {
 				range.moveEnd('character', q.length+found.length);
 				range.moveStart('character', q.length);
 				range.select();
-				console.log("range");
+				//console.log("range");
 			}
 		}
 	});
@@ -400,7 +395,7 @@ function attachHandlers() {
 					event.preventDefault();
 				
 				
-				insertRow(parseInt(car.attr("id")),"sdir");
+				insertRow(car,"sdir");
 				
 				car.removeClass("caretBelow");
 			
@@ -425,7 +420,7 @@ function attachHandlers() {
 
 				var car = $(".caretBelow"); 
 				if(car.length) {
-					insertRow(parseInt(car.attr("id")));
+					insertRow(car);
 				}
 				car.removeClass("caretBelow");
 
@@ -436,7 +431,7 @@ function attachHandlers() {
 				if(event.ctrlKey||$(".uin:focus").length||car.attr("id")==="-1"||!car.length||!confirm("Delete line?")){
 					break;
 				}	
-				deleteRow(parseInt(car.attr("id")));
+				deleteRow(car);
 				break;
 			default: //any other key
 				break;
@@ -447,68 +442,43 @@ function attachHandlers() {
 }
 
 /**
- * Inserts a new row at a given Index.
- * If the Index is the "document-wide" index, the row will be appended at the end.
+ * Inserts a new row after a given row.
+ * If the row is the last row, it will be appended at the end.
  * 
- * The indices of following rows will be shifted accordingly.
  *
- * @param atIndex The index where the row should be inserted at.
+ * @param row The row which the new row should be appended to.
  * @param func Extra functionalities. Currently supported: "sdir" for "Stage direction"
  */
-function insertRow(atIndex, func){
-    if(atIndex === index ){
+function insertRow(row, func){
+	$(".caret").removeClass("caret");
+    if(row.is("tr:last")){
         //append:
-        $("#table").append(getNewRow(index,func));
+        $("#table").append(getNewRow(func));
         $("#table").find("tr:last").find("td .uin:first").focus();
 		$("#table").find("tr:last").find("td .uin:first").addClass("caret");
         
-    } else {
-        //insert somewhere else:
-		tr = $("tr#"+atIndex);
-		
-		//shift the indices of all following rows
-		tr.nextAll("tr").each(function() {
-			$(this).attr("id",parseInt($(this).attr("id"))+1);
-		});
-		
-		tr.after(getNewRow(atIndex+1,func));
-		
+    } else {		
+		row.after(getNewRow(func));
 		
 		$("tr.caret td .uin:first").focus();
-		$("tr.caret td .uin:first").addClass("caret");
-		
-		
+		$("tr.caret td .uin:first").addClass("caret");	
     }
-	index++;
     attachHandlers();
 }
 
 /**
- * Deletes the row at the given index.
- *
- * The indices of following rows will be shifted accordingly.
+ * Deletes the given row.
  * 
- * @param atIndex The index where the row should be deleted at.
+ * @param row The row to be deleted.
  */
-function deleteRow(atIndex){
-	
-	tr = $("tr#"+atIndex);
-	tr.attr("id",-1);
-		
-	//shift the indices of all following rows
-	tr.nextAll("tr").each(function() {
-		$(this).attr("id",parseInt($(this).attr("id"))-1);
-	});
-	
-	tr.prev("tr").addClass("caretBelow");
-	tr.remove();
-	
-	index--;
+function deleteRow(row){
+	row.prev("tr").addClass("caretBelow");
+	row.remove();
 }
 
 
 /**
- * Set ups the datalist with all speakers.
+ * Sets up the datalist with all speakers.
  * 
  */
 function listSpeakers() {
