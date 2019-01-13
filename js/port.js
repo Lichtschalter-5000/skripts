@@ -83,7 +83,7 @@ function exportJSON(html,name) {
 	
 	var rowArray = new Array();
 	
-	html.find("tr:not(tr#-1)").each(function(){
+	html.find("tr:not(.invisiblerow)").each(function(){
 		row = new Object();
 		
 		var isSdir = $(this).find("td:first").is(".sdir");
@@ -121,12 +121,8 @@ function importJSON(json){
 	t = $("#table");
 	t.append(invisiblerow);
 	
-	var id = 0;
-	
-	
-	
 	for(row of rowArray){
-		t.append('<tr id="'+(id++)+'"></tr>');
+		t.append('<tr></tr>');
 		
 		r=$("tr:last");
 		
