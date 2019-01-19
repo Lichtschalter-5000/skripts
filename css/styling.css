@@ -46,3 +46,20 @@ textarea.uin{
 input.uin{
 	width:100%;
 }
+
+.pinned {
+	/* http://jsfiddle.net/livibetter/HV9HM/ */
+	margin-top: 0 !important;
+	position:fixed;
+	top:0;
+	width: 100%;
+	display: block;
+}
+
+#buttonbar {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-evenly;
+	
+	background-color: white;
+}

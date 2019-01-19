@@ -7,6 +7,9 @@ let invisiblerow = '<tr class ="invisiblerow"><td colspan="2"></td></tr>';
 
 
 $(document).ready( function (){
+	
+	initializeButtons();
+	
 	//New Document is set up
 	if(document.getElementById("loadfile").files.length){
 		setup("load");
@@ -362,7 +365,8 @@ function attachHandlers() {
 				
 				if(oldtr.next("tr").length){
 				oldtr.removeClass("caretBelow");
-				oldtr.next("tr").addClass("caretBelow");
+				event.preventDefault();
+				oldtr.next("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"nearest"});
 				}
 				break;
 			case 38://Arrow up, move caret up or move row
@@ -375,7 +379,8 @@ function attachHandlers() {
 				
 				if(oldtr.prev("tr").length){
 				oldtr.removeClass("caretBelow");
-				oldtr.prev("tr").addClass("caretBelow");
+				event.preventDefault();
+				oldtr.prev("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"nearest"});
 				}
 				break;
 			case 83://s - save (+Ctrl)
