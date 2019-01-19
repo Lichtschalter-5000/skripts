@@ -63,3 +63,7 @@ input.uin{
 	
 	background-color: white;
 }
+
+#speakerlist{
+  display: none;
+}
