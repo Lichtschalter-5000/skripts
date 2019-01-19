@@ -55,7 +55,7 @@ function initializeButtons() {
 		var e = $.Event('keydown');
 		e.which = 38; // UP
 		e.ctrlKey = !!$("td .uin:focus").length;
-		$($("td .uin:focus").length?$("td .uin"):document).trigger(e);
+		$($("td .uin:focus").length?$("td .uin:focus"):document).trigger(e);
 	}));
 	//MOVE DOWN
 	bar.append($('<img src="icons/down.gif" alt="Down"/>').mousedown(function(event){
@@ -64,7 +64,7 @@ function initializeButtons() {
 		var e = $.Event('keydown');
 		e.which = 40; // DOWN
 		e.ctrlKey = !!$("td .uin:focus").length;
-		$($("td .uin:focus").length?$("td .uin"):document).trigger(e);
+		$($("td .uin:focus").length?$("td .uin:focus"):document).trigger(e);
 	}));
 	
 	//MOVE LEFT
@@ -74,7 +74,7 @@ function initializeButtons() {
 		var e = $.Event('keydown');
 		e.which = 9; // TAB
 		e.shiftKey = true;
-		$("td .uin").trigger(e);
+		$("td .uin:focus").trigger(e);
 	}));
 	//MOVE RIGHT
 	bar.append($('<img src="icons/right.gif" alt="Right"/>').mousedown(function(event){
@@ -82,7 +82,7 @@ function initializeButtons() {
 		
 		var e = $.Event('keydown');
 		e.which = 9; // TAB
-		$("td .uin").trigger(e);
+		$("td .uin:focus").trigger(e);
 	}));
 	//CHANGE SDIR
 	bar.append($('<img src="icons/transfer.gif" alt="Change Sdir"/>').mousedown(function(event){
@@ -91,11 +91,11 @@ function initializeButtons() {
 		var e = $.Event('keydown');
 		e.which = 82; // R
 		e.ctrlKey = true;
-		$("td .uin").trigger(e);
+		$("td .uin:focus").trigger(e);
 	}));
 	
 	//PIN
-	bar.append($('<img src="icons/ball.gray.gif" alt="Pin/Unpin"/>').mousedown(function(event){
+	bar.append($('<img src="icons/ball.red.gif" alt="Pin/Unpin"/>').mousedown(function(event){
 		event.preventDefault();
 		
 		bar.toggleClass("stick");

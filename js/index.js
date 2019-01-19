@@ -366,7 +366,7 @@ function attachHandlers() {
 				if(oldtr.next("tr").length){
 				oldtr.removeClass("caretBelow");
 				event.preventDefault();
-				oldtr.next("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"nearest"});
+				oldtr.next("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"center"});
 				}
 				break;
 			case 38://Arrow up, move caret up or move row
@@ -380,7 +380,7 @@ function attachHandlers() {
 				if(oldtr.prev("tr").length){
 				oldtr.removeClass("caretBelow");
 				event.preventDefault();
-				oldtr.prev("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"nearest"});
+				oldtr.prev("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"center"});
 				}
 				break;
 			case 83://s - save (+Ctrl)
