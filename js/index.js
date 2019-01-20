@@ -239,10 +239,10 @@ function attachHandlers() {
 	//Autocompletion for the speaker
 	$("td.speaker input").off("input");
 	$("td.speaker input").on("input",function(event) {
-		if(/^[^a-z 0-9]$|.{2,}/gi.test(event.key)){//No chars outside alphanumeric should fire this
+		/*if(/^[^a-z 0-9]$|.{2,}/gi.test(event.key)){//No chars outside alphanumeric should fire this
 			//console.log(event.key);
 			return;
-		}
+		}*/
 		alert("xx");
 		event.preventDefault();
 		$(this).val($(this).val().substring(0,event.target.selectionStart)+(event.shiftKey?event.key.toUpperCase():event.key));
