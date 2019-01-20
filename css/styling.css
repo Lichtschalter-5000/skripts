@@ -47,6 +47,10 @@ input.uin{
 	width:100%;
 }
 
+.uin {
+ border-radius: 1em;
+}
+
 .pinned {
 	/* http://jsfiddle.net/livibetter/HV9HM/ */
 	margin-top: 0 !important;
