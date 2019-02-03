@@ -11,9 +11,9 @@ function importHTML(name) {
 		
 		if($(this).find("i").length&&ptext.length) {
 			tab.append('<tr class = "sdir"></tr>');
-			tab.find("tr:last").append('<td class="sdir" colspan="2">'+$(this).find("i").text()+'</td>');
+			tab.find("tr:last").append('<td class="sdir" colspan="2">'+$(this).find("i").text().replace(/\n/gi," ")+'</td>');
 		} else if(ptext.length){
-			text = $(this).html().replace(/\n/gi," ").replace("<br>","\n").split(/:<span style=['"]mso-tab-count:1['"]>.+?<\/span>/gi);
+			text = $(this).html().replace(/\n/gi," ").replace("<br>","\n").split(/:?<span style=['"]mso-tab-count:1['"]>.+?<\/span>/gi);
 			if(!text[1]) {
 				text[1] = text[0];
 				text[0] = "undefined";
