@@ -16,10 +16,10 @@ function importHTML(name) {
 			text = $(this).html().replace(/\n/gi," ").replace("<br>","\n").split(/:?<span style=['"]mso-tab-count:1['"]>.+?<\/span>/gi);
 			if(!text[1]) {
 				text[1] = text[0];
-				text[0] = "undefined";
+				text[0] = "";
 			}
 			
-			tab.append('<tr><td class="speaker">'+parseInput(text[0])+'</td><td class="text">'+parseInput(text[1])+'</td></tr>');
+			tab.append('<tr><td class="speaker">'+parseInput(text[0]).toUpperCase()+'</td><td class="text">'+parseInput(text[1])+'</td></tr>');
 		}
 	});
 	
