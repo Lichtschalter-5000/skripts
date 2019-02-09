@@ -41,7 +41,7 @@ $(document).ready( function (){
 	};
 	
 	$("button#loadhtmlButton").on("click", loadhtml);
-	$("input#loadhtml").on("click",loadhtml);
+	$("input#loadhtml").on("change",loadhtml);
 
 });
 
