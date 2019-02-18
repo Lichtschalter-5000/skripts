@@ -1,12 +1,14 @@
 //Template for a new row
-let newrow = '<tr class = "caret" ><td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td></tr>\n';
+const newrow = '<tr class = "caret" ><td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td></tr>\n';
 //Template for a new stagedirection row
-let newrowSdir = '<tr class = "sdir caret"><td class="sdir" colspan="2">{TEXT}</td></tr>\n';
+const newrowSdir = '<tr class = "sdir caret"><td class="sdir" colspan="2">{TEXT}</td></tr>\n';
+//Template for a new Heading row
+const newrowHeading = '<tr class = "heading"><td class="heading" colspan="2">{TEXT}</td></tr>\n';
 //Invisible row at the top
-let invisiblerow = '<tr class ="invisiblerow"><td colspan="2"></td></tr>';
+const invisiblerow = '<tr class ="invisiblerow"><td colspan="2"></td></tr>';
 
 
-$(document).ready( function (){
+$(document).ready(function (){
 	
 	initializeButtons();
 	
@@ -42,6 +44,8 @@ $(document).ready( function (){
 	
 	$("button#loadhtmlButton").on("click", loadhtml);
 	$("input#loadhtml").on("change",loadhtml);
+	
+	setTabs();
 
 });
 
@@ -89,7 +93,7 @@ function setup(action){
 /** 
  * Helper-Method to get a new Row
  *
- * @param func Extra functionalities. Currently supported: "sdir" for "Stage direction"
+ * @param func Extra functionalities. Currently supported: "sdir" for "Stage direction", "heading"
  * @return The complete row to insert
  */
 function getNewRow(func){
@@ -99,6 +103,11 @@ function getNewRow(func){
 		var text = '<textarea class="sdir uin" placeholder=" "></textarea>';		
 		break;
 		
+	case "heading":
+		var row = newrowHeading;
+		var text = '<textarea class="heading uin" placeholder=" "></textarea>';
+		break;
+	
 	default:	
 		var row = newrow;
 		var speaker = '<input class="uin" placeholder=" " list = "speakerlist">';
@@ -224,6 +233,32 @@ function attachHandlers() {
 				//console.log(wasSdir);
 				
 				insertRow(parentTr,wasSdir?"":"sdir");
+				var insertedrow = parentTr.next("tr");
+				//console.log(insertedrow);
+				
+				deleteRow(parentTr);
+
+				insertedrow.find("textarea").val(val).select();	
+				$(".caretBelow").removeClass("caretBelow");
+				break;
+				
+			case 72://h (+Ctrl) - Toggle Heading / normal text
+				if(!event.ctrlKey){
+					break;
+				}
+				event.preventDefault();
+				
+				parentTr = $(this).closest("tr");
+				
+				var val = parentTr.find("td textarea").val();
+				if(val == undefined){
+					val = parseHTMLToInput(parentTr.find("td.text").html());
+				}
+				//console.log("val:"+val);
+				var wasHeading = parentTr.hasClass("heading");
+				//console.log(wasSdir);
+				
+				insertRow(parentTr,wasHeading?"":"heading");
 				var insertedrow = parentTr.next("tr");
 				//console.log(insertedrow);
 				
@@ -453,7 +488,7 @@ function attachHandlers() {
  * 
  *
  * @param row The row which the new row should be appended to.
- * @param func Extra functionalities. Currently supported: "sdir" for "Stage direction"
+ * @param func Extra functionalities. Currently supported: "sdir" for "Stage direction", "heading"
  */
 function insertRow(row, func){
 	$(".caret").removeClass("caret");
@@ -506,4 +541,34 @@ function listSpeakers() {
 		datalist.append("<option value = \""+s+"\">");
 	}
 	datalist.append("<p>"+JSON.stringify(arr)+"</p>");
+}
+
+function setTabs() {
+	tabDiv = $("#flags");
+	tabDiv.empty();
+	
+	$("#table .heading").each(function(){
+		tabDiv.append($("<li onclick=\"changeTab()\">").text($(this).text()));
+	});
+	
+	
+	tabDiv.append($("<li onclick=\"changeTab('new')\">").text("+"));
+	tabDiv.append($("<li onclick=\"changeTab('all')\">").text("All"));
+}
+
+function changeTab(tab){
+	console.log(tab);
+	switch(tab) {
+		case "new":
+			
+			break;
+		
+		case "all":
+		
+			break;
+			
+		default:
+			
+			break;
+	}
 }
