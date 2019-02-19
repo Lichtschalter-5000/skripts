@@ -342,6 +342,11 @@ function attachHandlers() {
 			attachHandlers();
 		}
 	});
+
+    //unfocus heading uie
+    $("td.heading .uin").blur(function() {
+        setTabIDs();
+    });
 	
 	//Click UIE (e.g. if it was unfocussed in an empty state), move caret there
 	$("td .uin").off("focus");
@@ -480,6 +485,17 @@ function attachHandlers() {
 
 	});
 
+    
+    //click a flag
+    $("#flags li").off("click");
+    $("#flags li").on("click", function(event) {
+        //event.preventDefault();
+        $("#flags li.activeTab").removeClass("activeTab");
+        $(this).addClass("activeTab");
+
+        console.log($(this).text()+"hihi");
+    });
+
 }
 
 /**
@@ -547,28 +563,56 @@ function setTabs() {
 	tabDiv = $("#flags");
 	tabDiv.empty();
 	
-	$("#table .heading").each(function(){
-		tabDiv.append($("<li onclick=\"changeTab()\">").text($(this).text()));
+	$("#table tr.heading").each(function(){
+		tabDiv.append($("<li onclick=\"changeTab('"+$(this).attr('id')+"')\">").text($(this).text()));
+        //console.log($(this).text());
 	});
 	
 	
-	tabDiv.append($("<li onclick=\"changeTab('new')\">").text("+"));
-	tabDiv.append($("<li onclick=\"changeTab('all')\">").text("All"));
+	//tabDiv.append($("<li onclick=\"changeTab('special::new')\">").text("+"));
+	tabDiv.append($("<li onclick=\"changeTab('special::all')\">").text("All").addClass("activeTab"));
+
+    setTabIDs();
 }
 
 function changeTab(tab){
-	console.log(tab);
+	//console.log(tab);
 	switch(tab) {
-		case "new":
-			
+		case "special::new":
+                /*$("#editor tr:not(.invisiblerow):not(.hidden)").addClass("hidden");
+			    $("#table").append($(getNewRow("heading")).find(".uin").val("new").closest("tr"));
+                $("#table").append(getNewRow());
+                attachHandlers();
+                setTabs();
+                */
 			break;
 		
-		case "all":
-		
+		case "special::all":
+		    $("#editor tr.hidden").removeClass("hidden");
 			break;
 			
 		default:
-			
+			var selected = $("#"+tab);
+            selected.nextUntil("tr.heading").addBack().removeClass("hidden");
+
+            selected.prevAll("tr:not(.invisiblerow)").addClass("hidden");
+            selected.nextAll("tr.heading").nextAll("tr").addBack().addClass("hidden");
 			break;
 	}
 }
+
+function setTabIDs(){
+    $("#table tr.heading").each(function(){
+        var id = $(this).text().replace(/[^\w\d]/gi,'-');
+        while($(this).attr("id") !== id){
+            if($('#'+id).length){
+                var numberAtEnd = parseInt(/\d+$/gi.match(id));
+                id = (typeof numberAtEnd) === "number"?id+(numberAtEnd+1):id+"0";
+            } else {
+                $(this).attr("id",id);
+            }
+        } 
+        
+    });
+}
+

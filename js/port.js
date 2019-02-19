@@ -80,26 +80,41 @@ function exportPDF(json, name) {
 
 function exportJSON(html,name) {
 	name = name.replace(/[^a-z|1-9]/gi,"_");
+
+    var project = {
+        "project" : true,
+        "scenes" : []
+    };    
+        
+    $("tr.heading").each(function(){
+        var scene = {};
+
+        scene.heading = {};
+        scene.heading.id = $(this).attr("id");
+        scene.heading.html = $(this).html();
+
+        scene.content = new Array();
+	    
+	    $(this).nextUntil(".heading","tr").each(function(){
+		    row = new Object();
+		    
+		    var isSdir = $(this).find("td:first").is(".sdir");
+		    //Bug: Why the hell is the tr not .sdir?!
+		    if(isSdir){
+			    row.text = $(this).find("td.sdir .uin").length?$(this).find("td.sdir .uin").val() : parseHTMLToInput($(this).find("td.sdir").html());
+		    } else {
+			    row.speaker = $(this).find("td.speaker .uin").length?$(this).find("td.speaker .uin").val() : parseHTMLToInput($(this).find("td.speaker").html()); 
+		    
+			    row.text = $(this).find("td.text .uin").length?$(this).find("td.text .uin").val() : parseHTMLToInput($(this).find("td.text").html()); 
+		    }
+		    
+		    scene.content.push(row);
+	    });
+
+        project.scenes.push(scene);
+    });
 	
-	var rowArray = new Array();
-	
-	html.find("tr:not(.invisiblerow)").each(function(){
-		row = new Object();
-		
-		var isSdir = $(this).find("td:first").is(".sdir");
-		//Bug: Why the hell is the tr not .sdir?!
-		if(isSdir){
-			row.text = $(this).find("td.sdir .uin").length?$(this).find("td.sdir .uin").val() : parseHTMLToInput($(this).find("td.sdir").html());
-		} else {
-			row.speaker = $(this).find("td.speaker .uin").length?$(this).find("td.speaker .uin").val() : parseHTMLToInput($(this).find("td.speaker").html()); 
-		
-			row.text = $(this).find("td.text .uin").length?$(this).find("td.text .uin").val() : parseHTMLToInput($(this).find("td.text").html()); 
-		}
-		
-		rowArray.push(row);
-	});
-	
-	var jsonstring = JSON.stringify(rowArray,null,"\t");
+	var jsonstring = JSON.stringify(project,null,"\t");
 	if(name){		
 		name = name.replace(/[^a-z|1-9]/gi,"_");
 		//https://stackoverflow.com/questions/33271555/download-json-object-as-json-file-using-jquery
@@ -115,28 +130,49 @@ function exportJSON(html,name) {
 	return jsonstring;
 }
 
-function importJSON(json){
-	rowArray = JSON.parse(json);
-	//console.log("array"+rowArray);
-	t = $("#table");
-	
-	for(row of rowArray){
-		t.append('<tr></tr>');
-		
-		r=$("tr:last");
-		
-		var data = (!row.speaker&&row.speaker!=="")?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
-		if(row.speaker||row.speaker===""){
-			data = data.replace("{SPEAKER}",parseInput(row.speaker));
-		} else {
-			r.addClass("sdir");
-		}
-		data = data.replace("{TEXT}",parseInput(row.text));
-		r.append(data);
-	}
-	
-	$("tr:last").addClass("caretBelow");
-	
+function importJSON(json, headingContent){
+    var parsed = JSON.parse(json);
+    
+    if(!parsed.project) {//old version, when you had one scene per file
+    
+	    var rowArray = parsed;
+	    //console.log("array"+rowArray);
+	    var t = $("#table");
+	    
+        if(!headingContent) {
+            t.append(getNewRow("heading"));
+        }
+        else {
+            t.append(headingContent);
+        }
+
+	    for(row of rowArray){
+		    t.append('<tr></tr>');
+		    
+		    var r=$("tr:last");
+		    
+		    var data = (!row.speaker&&row.speaker!=="")?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
+		    if(row.speaker||row.speaker===""){
+			    data = data.replace("{SPEAKER}",parseInput(row.speaker));
+		    } else {
+			    r.addClass("sdir");
+		    }
+		    data = data.replace("{TEXT}",parseInput(row.text));
+		    r.append(data);
+	    }
+	    
+	} else {
+        var sceneArray = parsed.scenes;
+        
+        for(scene of sceneArray) {
+            importJSON(JSON.stringify(scene.content),$(getNewRow("heading")).attr("id",scene.heading.id).html(scene.heading.html));
+        }
+    }
+    //$("tr:last").addClass("caretBelow");
+
+    listSpeakers();
+    setTabs();
 	attachHandlers();
-	listSpeakers();
+	
 }
+
