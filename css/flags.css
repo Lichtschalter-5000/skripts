@@ -8,7 +8,6 @@
 	list-style-type:none;
 	background-color:rgb(220,220,220);
 
-	margin-top: 15px;
 	padding: 3px;
 	border-radius:7.5px 7.5px 0px 0px;
 	border: 1px solid darkgray;
@@ -28,6 +27,12 @@
 }
 
 .hidden {
-    display: none;
+    visibility: hidden;
+	display: none !important;
+}
+
+#flags {
+	display: flex;
+	flex-wrap: wrap;
 }
 

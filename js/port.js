@@ -1,3 +1,7 @@
+
+/**
+ * @Deprecated since new version of "filetype"
+ */
 function exportPDF(json, name) {
 	
 	var conv = new jsPDF();
@@ -83,7 +87,8 @@ function exportJSON(html,name) {
 
     var project = {
         "project" : true,
-        "scenes" : []
+        "scenes" : [],
+		"speakers" : []
     };    
         
     $("tr.heading").each(function(){
@@ -114,6 +119,9 @@ function exportJSON(html,name) {
         project.scenes.push(scene);
     });
 	
+	project.speakers = JSON.parse($("#speakerlist").find("p").html());
+	
+	
 	var jsonstring = JSON.stringify(project,null,"\t");
 	if(name){		
 		name = name.replace(/[^a-z|1-9]/gi,"_");
@@ -140,7 +148,7 @@ function importJSON(json, headingContent){
 	    var t = $("#table");
 	    
         if(!headingContent) {
-            t.append(getNewRow("heading"));
+            t.append($(getNewRow("heading")).find("td").text("new").parent());
         }
         else {
             t.append(headingContent);
@@ -171,7 +179,7 @@ function importJSON(json, headingContent){
     //$("tr:last").addClass("caretBelow");
 
     listSpeakers();
-    setTabs();
+    setTabIDs();
 	attachHandlers();
 	
 }

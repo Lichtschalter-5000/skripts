@@ -45,7 +45,7 @@ $(document).ready(function (){
 	$("button#loadhtmlButton").on("click", loadhtml);
 	$("input#loadhtml").on("change",loadhtml);
 	
-	setTabs();
+	setTabIDs();
 
 });
 
@@ -64,11 +64,21 @@ function setup(action){
 		
 		case "load":		
 			//https://stackoverflow.com/questions/36127648/uploading-a-json-file-and-using-it
+			var fileList = document.getElementById("loadfile").files;
+			
+			for(var i = 0; i<fileList.length;i++) {
 			var fr = new FileReader();
-			fr.readAsText(document.getElementById("loadfile").files.item(0));
+			
+			fr.heading;
+			
 			fr.onload = function(e) {
-				importJSON(e.target.result);
+				importJSON(e.target.result,this.heading);
 			}
+			
+			fr.heading = $(getNewRow("heading")).find("td").text(fileList[i].name.replace(".json","")).parent();
+			fr.readAsText(fileList.item(i));
+			}
+			
 			break;
 			
 		case "importhtml":
@@ -492,8 +502,6 @@ function attachHandlers() {
         //event.preventDefault();
         $("#flags li.activeTab").removeClass("activeTab");
         $(this).addClass("activeTab");
-
-        console.log($(this).text()+"hihi");
     });
 
 }
@@ -569,10 +577,11 @@ function setTabs() {
 	});
 	
 	
+	
 	//tabDiv.append($("<li onclick=\"changeTab('special::new')\">").text("+"));
 	tabDiv.append($("<li onclick=\"changeTab('special::all')\">").text("All").addClass("activeTab"));
 
-    setTabIDs();
+    //setTabIDs();
 }
 
 function changeTab(tab){
@@ -604,15 +613,18 @@ function changeTab(tab){
 function setTabIDs(){
     $("#table tr.heading").each(function(){
         var id = $(this).text().replace(/[^\w\d]/gi,'-');
+		if (id==="") {id="undefined";}
+		
         while($(this).attr("id") !== id){
             if($('#'+id).length){
-                var numberAtEnd = parseInt(/\d+$/gi.match(id));
-                id = (typeof numberAtEnd) === "number"?id+(numberAtEnd+1):id+"0";
+                var numberAtEnd = parseInt(id.match(/\d+$/gi));
+                id = isNaN(numberAtEnd)?id+(numberAtEnd+1):id+"0";
             } else {
                 $(this).attr("id",id);
             }
         } 
         
     });
+	setTabs();
 }
 
