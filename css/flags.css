@@ -20,6 +20,7 @@
 }
 
 .heading {
+	page-break-before: always;
 	font-weight: bold;
     font-size: larger;
 	text-align: left;
