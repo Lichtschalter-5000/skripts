@@ -60,6 +60,7 @@ function setup(action){
 			listSpeakers();
 			insertRow($(".invisiblerow"));
 			$("tr:last").addClass("caret");
+			setTabs();
 			break;
 		
 		case "load":		
