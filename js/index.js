@@ -210,8 +210,8 @@ function attachHandlers() {
                 break;
 			
 			
-			case 38://Arrow up (move caret above line)
-			case 40://Arrow down (move caret below line)
+			case 38://Arrow up (+Ctrl) (move caret above line)
+			case 40://Arrow down (+Ctrl) (move caret below line)
 				if(!event.ctrlKey){
 					break;
 				}
@@ -252,8 +252,8 @@ function attachHandlers() {
 				$(".caretBelow").removeClass("caretBelow");
 				break;
 				
-			case 72://h (+Ctrl) - Toggle Heading / normal text
-				if(!event.ctrlKey){
+			case 72://h (+Ctrl+Shift) - Toggle Heading / normal text
+				if(!event.ctrlKey || !event.shiftKey){
 					break;
 				}
 				event.preventDefault();
@@ -409,29 +409,29 @@ function attachHandlers() {
 			case 40://Arrow down, move caret down or move row
 				var oldtr = $(".caretBelow");
 				
-				if(event.shiftKey && event.ctrlKey && !oldtr.hasClass("invisiblerow") &&!oldtr.next().hasClass("invisiblerow")){
+				if(event.shiftKey && event.ctrlKey && !oldtr.hasClass("invisiblerow") && (!oldtr.next().hasClass("invisiblerow") || !oldtr.next().hasClass("hidden"))){
 					oldtr.insertAfter(oldtr.next());					
 					break;
 				}
 				
-				if(oldtr.next("tr").length){
-				oldtr.removeClass("caretBelow");
-				event.preventDefault();
-				oldtr.next("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"center"});
+				if(oldtr.next("tr").length && !oldtr.next("tr").hasClass("hidden")){
+					oldtr.removeClass("caretBelow");
+					event.preventDefault();
+					oldtr.next("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"center"});
 				}
 				break;
 			case 38://Arrow up, move caret up or move row
 				var oldtr = $(".caretBelow");
 				
-				if(event.shiftKey && event.ctrlKey && !oldtr.hasClass("invisiblerow") &&!oldtr.prev().hasClass("invisiblerow")) {
+				if(event.shiftKey && event.ctrlKey && !oldtr.hasClass("invisiblerow") &&!(oldtr.prev().hasClass("invisiblerow")||oldtr.prev().hasClass("hidden"))) {
 					oldtr.insertBefore(oldtr.prev());					
 					break;
 				}
 				
-				if(oldtr.prev("tr").length){
-				oldtr.removeClass("caretBelow");
-				event.preventDefault();
-				oldtr.prev("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"center"});
+				if(oldtr.prev("tr").length && !oldtr.prev("tr").hasClass("hidden")){
+					oldtr.removeClass("caretBelow");
+					event.preventDefault();
+					oldtr.prev("tr").addClass("caretBelow").get(0).scrollIntoView({behavior:"smooth", block:"center"});
 				}
 				break;
 			case 83://s - save (+Ctrl)
