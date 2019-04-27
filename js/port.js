@@ -83,7 +83,7 @@ function exportPDF(json, name) {
 }
 
 function exportJSON(html,name) {
-	name = name.replace(/[^a-z|1-9]/gi,"_");
+	name = name?name.replace(/[^a-z|1-9]/gi,"_"):null;
 
     var project = {
         "project" : true,
@@ -184,3 +184,59 @@ function importJSON(json, headingContent){
 	
 }
 
+function exportWordHtml(json, name) {
+	var parsed = JSON.parse(json);
+    
+	var html = `<html>
+		<head>
+		<meta http-equiv=Content-Type content="text/html;>
+		<meta charset="UTF-8">
+		<style>
+		<!--
+		 /* Page Definitions */
+		 @page WordSection1
+			{size:842.0pt 595.0pt;
+			margin:70.85pt 70.85pt 70.85pt 2.0cm;}
+		div.WordSection1
+			{page:WordSection1;}
+		-->
+		</style>
+		</head>
+		<body>
+		<div class=WordSection1>`; 
+    
+	var scenes = parsed.scenes;
+	
+	for(scene of scenes) {
+		html += "<h4>"+$(scene.heading.html).text()+"</h4>";
+		for(row of scene.content){
+			var data = `<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:12.0pt; margin-left:70.9pt;text-indent:-70.9pt'>`; 
+			
+			if(row.speaker||row.speaker===""){
+			    data += parseInput(row.speaker);
+				data += ":</br>";
+		    } else {
+			    data+="<i>";
+		    }
+		    data += parseInput(row.text);
+			if(!row.speaker||!row.speaker===""){ data+="</i>"; }
+		    html += data + "\n";
+		}
+	}
+
+	html += `</div>
+		</body>
+		</html>\n`;
+
+	if(name){		
+		name = name.replace(/[^a-z|1-9]/gi,"_");
+		//https://stackoverflow.com/questions/33271555/download-json-object-as-json-file-using-jquery
+		$("<a />", {
+			"download": name+".html",
+			"href" : "data:text/html," + encodeURIComponent(html)
+		}).appendTo("body")
+		.click(function() {
+			$(this).remove()
+		})[0].click();
+	}
+}
