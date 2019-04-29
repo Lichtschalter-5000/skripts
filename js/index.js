@@ -173,7 +173,7 @@ function attachHandlers() {
 			
 
 				
-				if($(this).closest("tr").is(":not(tr:last)")&&!$(this).parent().next("td").find(".uin").length ) {//TR not at the end, next UIE not in the same row
+				if($(this).closest("tr").is(":not(tr:not(.hidden):last)")&&!$(this).parent().next("td").find(".uin").length ) {//TR not at the end, next UIE not in the same row
 					if($(this).parent().is("td:last-child")) {//Last UIE in the row,
 						if(event.which!==9){//not TAB
 							$(this).closest("tr").addClass("caretBelow");// move Caret below
@@ -190,7 +190,7 @@ function attachHandlers() {
 					} else { //Move to next UIE in row
 						$(this).parent("td").next("td").click();//activate it
 					}
-				} else if($(this).parent().is("td:last-child")){//Last ever UIE was broken out of -> need to insert a new row
+				} else if($(this).parent().is("td:last-child:not(.hidden)")){//Last ever UIE was broken out of -> need to insert a new row
 					$(".caret").removeClass("caret");
 					insertRow($(this).closest("tr"));
 				} 
