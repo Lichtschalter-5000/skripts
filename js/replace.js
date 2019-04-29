@@ -48,8 +48,6 @@ function parseHTMLToInput(text){
 		//'&#x60;':"`",
 		//'&#x3D;':"=",
 		"<br>": '\n',
-		"<i>(": '_(',
-		")</i>": ')_',
 		"<i>": '*(',
 		"</i>": ')*',
 		"<b>": '{',
@@ -59,5 +57,5 @@ function parseHTMLToInput(text){
 	};
  
 	
-return text.replace(/(<i>\(?)|(\)?<\/i>)|(<\/?(?:[ub]|br)>)|(&((?:[gl]t|amp);))/gi, function(m) { return map[m]; });
+return text.replace(/(<\/?(?:[iub]|br)>)|(&((?:[gl]t|amp);))/gi, function(m) { return map[m]; });
 }
