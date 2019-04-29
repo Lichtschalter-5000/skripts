@@ -17,8 +17,6 @@ function parseInput(text){
 	'`': '&#x60;',
 	'=': '&#x3D;',
 	"\n": '<br>',//Styling
-	"_(": '<i>(',
-	")_": ')</i>',
 	"*(": '<i>',
 	")*": '</i>',
 	"{": '<b>',
@@ -28,7 +26,7 @@ function parseInput(text){
   };
 
 
-	return text.replace(/[&<>\"\'\/\`={}\[\]\n]|([_\*]\(|\)[_\*])/g, function(m) { return map[m]; });
+	return text.replace(/[&<>\"\'\/\`={}\[\]\n]|(\*\(|\)\*)/g, function(m) { return map[m]; });
 }
 
 /**
