@@ -439,7 +439,8 @@ function attachHandlers() {
 				if(event.ctrlKey){
 					event.preventDefault();
 					var name = prompt("How to name the file?");
-					exportPDF(exportJSON($("#table"),name),name);
+					exportWordHtml(exportJSON($("#table")),name);
+					exportJSON($("#table"),name);
 				}
 				break;
 				

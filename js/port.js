@@ -199,6 +199,7 @@ function exportWordHtml(json, name) {
 			margin:70.85pt 70.85pt 70.85pt 2.0cm;}
 		div.WordSection1
 			{page:WordSection1;}
+		.MsoNormal {margin-top:0cm;margin-right:0cm;margin-bottom:7.0pt; margin-left:70.9pt;text-indent:-70.9pt;margin-right:100px}
 		-->
 		</style>
 		</head>
@@ -210,15 +211,15 @@ function exportWordHtml(json, name) {
 	for(scene of scenes) {
 		html += "<h4>"+$(scene.heading.html).text()+"</h4>";
 		for(row of scene.content){
-			var data = `<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:12.0pt; margin-left:70.9pt;text-indent:-70.9pt'>`; 
+			var data = `<p class=MsoNormal>`; 
 			
 			if(row.speaker||row.speaker===""){
 			    data += parseInput(row.speaker);
-				data += ":</br>";
+				data += ":";
 		    } else {
 			    data+="<i>";
 		    }
-		    data += parseInput(row.text);
+		    data += "<span style='mso-tab-count:1'></span>" + parseInput(row.text);
 			if(!row.speaker||!row.speaker===""){ data+="</i>"; }
 		    html += data + "\n";
 		}
