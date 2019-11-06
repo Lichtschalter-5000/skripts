@@ -86,6 +86,7 @@ function exportJSON(html,name) {
 	name = name?name.replace(/[^a-z|1-9]/gi,"_"):null;
 
     var project = {
+    	"version" : 1,
         "project" : true,
         "scenes" : [],
 		"speakers" : []
