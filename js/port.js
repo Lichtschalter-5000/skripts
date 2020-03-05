@@ -1,12 +1,12 @@
-
+// noinspection JSUnusedGlobalSymbols
 /**
  * @Deprecated since new version of "filetype"
  */
 function exportPDF(json, name) {
-	
-	var conv = new jsPDF();
-	var rowArray = JSON.parse(json);
-	
+
+	const conv = new jsPDF();
+	const rowArray = JSON.parse(json);
+
 	conv.setFont("Helvetica");
 	
 	conv.setFontSize(16);
@@ -16,49 +16,47 @@ function exportPDF(json, name) {
 	
 	conv.setFontSize(12);
 	conv.setFontStyle("normal");
-	
-	var ty = 30;
-	var tx = 20;
-	for(row of rowArray){//Every row
-		
+
+	let ty = 30;
+	let tx = 20;
+	for(let row of rowArray){//Every row
+
 		if(ty>=280){
 			ty = 20;
 			conv.addPage();
 		}
-		
-		isSdir = !(!!row.speaker||row.speaker==="");
-		if(!isSdir){
-			var speaker = parseInput(row.speaker);
-		}
-		
+
+		let isSdir = !(!!row.speaker||row.speaker==="");
+		const speaker = parseInput(row.speaker);
+
 		let text = parseInput(row.text).split("<br>");
-		for(var b = 0; b < text.length;b++){
+		for(let b = 0; b < text.length;b++){
 			text[b] = conv.splitTextToSize(text[b],isSdir?170:150);
 		}
-		
+
 		// conv.setFont("Helvetica");
 		// conv.setFontSize(15);
 		// conv.setFontStyle("normal");
 		tx = 20;
 		if(!isSdir){
-			conv.fromHTML(speaker+(speaker.endsWith(":")||speaker===""?"":":"),tx,ty);
+			conv.fromHTML(speaker+(speaker.endsWith(":")?"":":"),tx,ty);
 			tx = 50;
 		} else {
 			tx = 35;
 		}
-		for(txt of text){//Every paragraph
-			for(var l=0; l<txt.length;l++){//Every line in paragraph
-				
-				line = txt[l];
-				
+		for(let txt of text){//Every paragraph
+			for(let l=0; l<txt.length;l++){//Every line in paragraph
+
+				let line = txt[l];
+
 				if(isSdir){
 					line = "<i>"+line+"</i>";
-					
+
 				}
 				conv.fromHTML(line,tx,ty);
 				//conv.text(line,50,ty);
 				//console.log(ty+" : "+line);
-				
+
 				ty+=5;
 				if(ty>=280 && txt[l+1]){
 					//console.log("add page");
@@ -67,9 +65,9 @@ function exportPDF(json, name) {
 					conv.fromHTML(speaker+" (f.):",20,ty);
 				}
 			}
-			
+
 		}
-		
+
 		ty+=5;
 	}
 	
@@ -85,27 +83,28 @@ function exportPDF(json, name) {
 function exportJSON(html,name) {
 	name = name?name.replace(/[^a-z|1-9]/gi,"_"):null;
 
-    var project = {
-    	"version" : 1,
-        "project" : true,
-        "scenes" : [],
-		"speakers" : []
-    };    
-        
-    $("tr.heading").each(function(){
-        var scene = {};
+	const project = {
+		"version": 1,
+		"project": true,
+		"scenes": [],
+		"speakers": []
+	};
 
-        scene.heading = {};
+	$("tr.heading").each(function(){
+		const scene = {};
+
+		scene.heading = {};
         scene.heading.id = $(this).attr("id");
         scene.heading.html = $(this).html();
 
-        scene.content = new Array();
+        scene.content = [];
 	    
-	    $(this).nextUntil(".heading","tr").each(function(){
-		    row = new Object();
-		    
-		    var isSdir = $(this).find("td:first").is(".sdir");
-		    //Bug: Why the hell is the tr not .sdir?!
+	    // noinspection JSUnresolvedFunction
+		$(this).nextUntil(".heading","tr").each(function(){
+			let row = {};
+
+			const isSdir = $(this).find("td:first").is(".sdir");
+			//Bug: Why the hell is the tr not .sdir?!
 		    if(isSdir){
 			    row.text = $(this).find("td.sdir .uin").length?$(this).find("td.sdir .uin").val() : parseHTMLToInput($(this).find("td.sdir").html());
 		    } else {
@@ -121,9 +120,9 @@ function exportJSON(html,name) {
     });
 	
 	project.speakers = JSON.parse($("#speakerlist").find("p").html());
-	
-	
-	var jsonstring = JSON.stringify(project,null,"\t");
+
+
+	const jsonstring = JSON.stringify(project, null, "\t");
 	if(name){		
 		name = name.replace(/[^a-z|1-9]/gi,"_");
 		//https://stackoverflow.com/questions/33271555/download-json-object-as-json-file-using-jquery
@@ -140,40 +139,42 @@ function exportJSON(html,name) {
 }
 
 function importJSON(json, headingContent){
-    var parsed = JSON.parse(json);
-    
-    if(!parsed.project) {//old version, when you had one scene per file
-    
-	    var rowArray = parsed;
-	    //console.log("array"+rowArray);
-	    var t = $("#table");
-	    
-        if(!headingContent) {
+	const parsed = JSON.parse(json);
+
+	if(!parsed.project) {//old version, when you had one scene per file
+
+		const rowArray = parsed;
+		//console.log("array"+rowArray);
+		const t = $("#table");
+
+		if(!headingContent) {
             t.append($(getNewRow("heading")).find("td").text("new").parent());
         }
         else {
             t.append(headingContent);
         }
 
-	    for(row of rowArray){
+	    for(let row of rowArray){
 		    t.append('<tr></tr>');
-		    
-		    var r=$("tr:last");
-		    
-		    var data = (!row.speaker&&row.speaker!=="")?'<td class="sdir" colspan="2">{TEXT}</td>':'<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
-		    if(row.speaker||row.speaker===""){
-			    data = data.replace("{SPEAKER}",parseInput(row.speaker));
+
+			const r = $("tr:last");
+
+			let data = (!row.speaker && row.speaker !== "") ? '<td class="sdir" colspan="2">{TEXT}</td>' : '<td class="speaker">{SPEAKER}</td><td class="text">{TEXT}</td>';
+			if(row.speaker||row.speaker===""){
+			    // noinspection JSCheckFunctionSignatures
+				data = data.replace("{SPEAKER}",parseInput(row.speaker));
 		    } else {
 			    r.addClass("sdir");
 		    }
-		    data = data.replace("{TEXT}",parseInput(row.text));
+		    // noinspection JSCheckFunctionSignatures
+			data = data.replace("{TEXT}",parseInput(row.text));
 		    r.append(data);
 	    }
 	    
 	} else {
-        var sceneArray = parsed.scenes;
-        
-        for(scene of sceneArray) {
+		const sceneArray = parsed.scenes;
+
+		for(let scene of sceneArray) {
             importJSON(JSON.stringify(scene.content),$(getNewRow("heading")).attr("id",scene.heading.id).html(scene.heading.html));
         }
     }
@@ -186,11 +187,11 @@ function importJSON(json, headingContent){
 }
 
 function exportWordHtml(json, name) {
-	var parsed = JSON.parse(json);
-    
-	var html = `<html>
+	const parsed = JSON.parse(json);
+
+	let html = `<html lang="de">
 		<head>
-		<meta http-equiv=Content-Type content="text/html;>
+		<meta http-equiv=Content-Type content="text/html;">
 		<meta charset="UTF-8">
 		<style>
 		<!--
@@ -200,20 +201,21 @@ function exportWordHtml(json, name) {
 			margin:70.85pt 70.85pt 70.85pt 2.0cm;}
 		div.WordSection1
 			{page:WordSection1;}
-		.MsoNormal {margin-top:0cm;margin-right:0cm;margin-bottom:7.0pt; margin-left:70.9pt;text-indent:-70.9pt;margin-right:100px}
+		.MsoNormal {text-indent:-70.9pt;margin: 0 100px 7.0pt 70.9pt;}
 		-->
 		</style>
+		<title>/*ToDo*/</title>
 		</head>
 		<body>
-		<div class=WordSection1>`; 
-    
-	var scenes = parsed.scenes;
-	
-	for(scene of scenes) {
+		<div class=WordSection1>`;
+
+	const scenes = parsed.scenes;
+
+	for(let scene of scenes) {
 		html += "<h4>"+$(scene.heading.html).text()+"</h4>";
-		for(row of scene.content){
-			var data = `<p class=MsoNormal>`; 
-			
+		for(let row of scene.content){
+			let data = `<p class=MsoNormal>`;
+
 			if(row.speaker||row.speaker===""){
 			    data += parseInput(row.speaker);
 				data += ":";
@@ -221,7 +223,7 @@ function exportWordHtml(json, name) {
 			    data+="<i>";
 		    }
 		    data += "<span style='mso-tab-count:1'></span>" + parseInput(row.text);
-			if(!row.speaker||!row.speaker===""){ data+="</i>"; }
+			if(!row.speaker){ data+="</i>"; }
 		    html += data + "\n";
 		}
 	}

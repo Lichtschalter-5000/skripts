@@ -7,26 +7,26 @@
  * @return The converted text
  */
 function parseInput(text){
-	var map = {
-    '&': '&amp;',//"dangerous"-HTML-Characters
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;',
-	'/': '&#x2F;',
-	'`': '&#x60;',
-	'=': '&#x3D;',
-	"\n": '<br>',//Styling
-	"*(": '<i>',
-	")*": '</i>',
-	"{": '<b>',
-	"}": '</b>',
-	"[": '<u>',
-	"]": '</u>'
-  };
+	const map = {
+		'&': '&amp;',//"dangerous"-HTML-Characters
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#039;',
+		'/': '&#x2F;',
+		'`': '&#x60;',
+		'=': '&#x3D;',
+		"\n": '<br>',//Styling
+		"*(": '<i>',
+		")*": '</i>',
+		"{": '<b>',
+		"}": '</b>',
+		"[": '<u>',
+		"]": '</u>'
+	};
 
 
-	return text.replace(/[&<>\"\'\/\`={}\[\]\n]|(\*\(|\)\*)/g, function(m) { return map[m]; });
+	return text.replace(/[&<>"'\/`={}\[\]\n]|(\*\(|\)\*)/g, function(m) { return map[m]; });
 }
 
 /**
@@ -38,10 +38,10 @@ function parseInput(text){
  */
 function parseHTMLToInput(text){
 	//console.log("text:"+text);
-	var map = {
-		'&amp;':"&",
-		'&lt;':"<",
-		'&gt;':">",
+	const map = {
+		'&amp;': "&",
+		'&lt;': "<",
+		'&gt;': ">",
 		//'&quot;':"\"",
 		//'&#039;':"'",
 		//'&#x2F;':"/",
@@ -55,7 +55,7 @@ function parseHTMLToInput(text){
 		"<u>": '[',
 		"</u>": ']'
 	};
- 
-	
-return text.replace(/(<\/?(?:[iub]|br)>)|(&((?:[gl]t|amp);))/gi, function(m) { return map[m]; });
+
+
+	return text.replace(/(<\/?(?:[iub]|br)>)|(&((?:[gl]t|amp);))/gi, function(m) { return map[m]; });
 }

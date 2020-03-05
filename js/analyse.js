@@ -1,14 +1,15 @@
+// noinspection JSUnusedGlobalSymbols
 function analyse(json){
 	let text = JSON.parse(json);
-	
-	var analytics = new Object();
-	
+
+	let analytics = {};
+
 	/* Array of objects for each speaker
 	 *
 	 */
-	analytics.speakers = new Array();
-	for (speaker of text.speakers){
-		var obj = new Object();
+	analytics.speakers = [];
+	for (let speaker of text.speakers){
+		const obj = {};
 		obj.count = 0;
 		obj.words = 0;
 		
@@ -18,9 +19,9 @@ function analyse(json){
 	analytics.scenes = 0;
 	analytics.stageDirections = 0;
 	analytics.inlineStageDirectionWords = 0;
-	
-	
-	for (scene of text.scenes){
+
+
+	for (let scene of text.scenes){
 		analytics.scenes++;
 		for (line of scene.content) {
 			if(!line.speaker) {
@@ -29,9 +30,9 @@ function analyse(json){
 			}
 			let sp = analytics.speakers[line.speaker];
 			sp.count++;
-			words = line.text.split(/[\s\n]/);
+			let words = line.text.split(/[\s\n]/);
 			let counting = true;
-			for (word of words){
+			for (let word of words){
 				if(word.startsWith("*(")) { counting = false;}
 				if(counting && /\b\w+\b/.test(word)){
 					//console.log(word);

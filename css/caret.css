@@ -15,7 +15,7 @@ tr.caretBelow td, tr.invisiblerow.caretBelow td{
 }
 
 tr.invisiblerow{
-	height: 0px;
+	height: 0;
 }
 
 
